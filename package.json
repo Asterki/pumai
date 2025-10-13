@@ -1,0 +1,56 @@
+{
+  "name": "pumai",
+  "version": "1.0.0",
+  "description": "UNAH IA",
+  "main": "index.js",
+  "workspaces": [
+    "client",
+    "server",
+    "shared"
+  ],
+  "scripts": {
+    "build:web-client": "npm --workspace=client run build",
+    "build:server": "npm --workspace=server run build",
+    "build:shared": "npm --workspace=shared run build",
+    "build": "npm run build:client && npm run build:server",
+    "dev:web-client": "npm --workspace=web-client run dev",
+    "dev:server": "npm --workspace=server run dev",
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "echo \"No tests configured\" && exit 0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tailwindcss/vite": "^4.0.6",
+    "@tanstack/nitro-v2-vite-plugin": "^1.132.31",
+    "@tanstack/react-devtools": "^0.7.0",
+    "@tanstack/react-router": "^1.132.0",
+    "@tanstack/react-router-devtools": "^1.132.0",
+    "@tanstack/router-plugin": "^1.132.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "lucide-react": "^0.545.0",
+    "mongoose": "^8.19.1",
+    "passport": "^0.7.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.6"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.2.0",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^5.0.4",
+    "jsdom": "^27.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^7.1.7",
+    "vitest": "^3.0.5",
+    "web-vitals": "^5.1.0"
+  }
+}

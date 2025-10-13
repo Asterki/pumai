@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: pumai-mongo
+    volumes:
+      - mongo-data:/data/db
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    restart: always
+
+  mongoinit:
+    image: mongo:4.4
+    depends_on:
+      - mongo
+    entrypoint: ["bash", "-c"]
+    command: >
+      "
+      echo 'Waiting for MongoDB to be ready...' &&
+      until mongo --host mongo --eval 'db.adminCommand(\"ping\")' >/dev/null 2>&1; do
+        sleep 1;
+      done &&
+      echo 'Mongo is up. Initiating replica set...' &&
+      mongo --host mongo --eval '
+        rs.initiate({
+          _id: \"rs0\",
+          members: [{ _id: 0, host: \"mongo:27017\" }]
+        });
+      '
+      "
+    restart: "no"
+
+  redis:
+    image: redis:7
+    container_name: pumai-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pumai-app
+    depends_on:
+      - mongo
+      - mongoinit
+      - redis
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./.env.prod:/app/server/.env.prod
+    ports:
+      - "3000:80"
+    restart: always
+    command: ["sh", "-c", "sleep 5 && npm run start"]
+
+volumes:
+  mongo-data:
+  redis-data:
