@@ -21,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@reduxjs/toolkit": "^2.9.0",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/nitro-v2-vite-plugin": "^1.132.31",
     "@tanstack/react-devtools": "^0.7.0",
@@ -45,6 +46,8 @@
     "passport": "^0.7.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-i18next": "^16.0.1",
+    "react-redux": "^9.2.0",
     "sharp": "^0.34.4",
     "socket.io": "^4.8.1",
     "tailwindcss": "^4.0.6",

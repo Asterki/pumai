@@ -10,7 +10,7 @@ services:
     restart: always
 
   mongoinit:
-    image: mongo:4.4
+    image: mongo:latest
     depends_on:
       - mongo
     entrypoint: ["bash", "-c"]
