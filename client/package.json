@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3000",
+    "dev": "vite --port 2173",
     "build": "vite build && tsc",
     "serve": "vite preview",
     "test": "vitest run"
@@ -11,4 +11,3 @@
   "dependencies": {},
   "devDependencies": {}
 }
-

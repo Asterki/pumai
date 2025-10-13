@@ -1,6 +1,6 @@
 import mongoose, { ConnectOptions } from "mongoose";
 
-import setupServer from "../setup";
+// import setupServer from "../setup";
 
 class MongoDBClient {
   private readonly connectionString: string;
@@ -54,7 +54,7 @@ class MongoDBClient {
 
     // Once we know that the database is connected, we can load the server setup check
     (async () => {
-      await setupServer();
+      // await setupServer();
     })();
   };
 

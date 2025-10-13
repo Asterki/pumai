@@ -11,7 +11,7 @@ import { loadEnv } from "./config/env";
 import MongoDBClient from "./config/mongodb";
 import { registerRoutes } from "./routes";
 import { traceIdMiddleware } from "./middleware/traceId";
-import SessionsService from "./services/sessions";
+// import SessionsService from "./services/sessions";
 import SocketServer from "./services/socket";
 
 // import TelegramBot from "./services/telegram";
@@ -51,8 +51,8 @@ export async function startServer() {
   // new TelegramBot().getBot();
 
   // Services
-  const sessions = SessionsService.prototype.getInstance();
-  sessions.loadToServer(app);
+  // const sessions = SessionsService.prototype.getInstance();
+  // sessions.loadToServer(app);
 
   registerRoutes(app);
   new MongoDBClient(process.env.MONGODB_URI!).connect();
