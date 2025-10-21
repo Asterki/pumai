@@ -9,20 +9,7 @@ export function loadEnv() {
   dotenv.config(); // Load base first
   dotenv.config({ path: path.resolve(process.cwd(), envFile) });
 
-  const requiredEnv = [
-    "SESSION_SECRET",
-    "SESSION_COLLECTION_NAME",
-    "MONGODB_URI",
-    "EMAIL_HOST",
-    "EMAIL_PORT",
-    "EMAIL_SECURE",
-    "EMAIL_FROM",
-    "PORT",
-    "EMAIL_USER",
-    "EMAIL_PASS",
-    "FRONT_END_ORIGIN",
-    "TELEGRAM_BOT_TOKEN",
-  ];
+  const requiredEnv = ["MONGODB_URI", "FRONT_END_ORIGIN", "OLLAMA_URL"];
 
   console.log("[ENV] Loaded variables:", requiredEnv.join(", "));
   const missing = requiredEnv.filter((key) => !process.env[key]);

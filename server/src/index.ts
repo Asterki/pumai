@@ -12,7 +12,9 @@ import MongoDBClient from "./config/mongodb";
 import { registerRoutes } from "./routes";
 import { traceIdMiddleware } from "./middleware/traceId";
 // import SessionsService from "./services/sessions";
+
 import SocketServer from "./services/socket";
+import OllamaService from "./services/ollama";
 
 // import TelegramBot from "./services/telegram";
 
