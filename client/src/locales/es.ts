@@ -20,6 +20,18 @@ const translation = {
     "query-too-long":
       "La consulta proporcionada es demasiado larga. Por favor, reduzca la longitud de la consulta.",
   },
+
+  dashboard: {
+    componentes: {
+      navbar: {},
+    },
+
+    sidebar: {
+      title: "Dashboard",
+      chat: "Chat",
+      about: "Acerca de",
+    },
+  },
 };
 
 export default translation;

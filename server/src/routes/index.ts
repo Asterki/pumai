@@ -1,9 +1,8 @@
 import type { Express } from "express";
 
 // Import routers
-
-// import FilesRouter from "./files";
+import StatusRouter from "./status";
 
 export function registerRoutes(app: Express): void {
-  // app.use("/api/files", FilesRouter);
+	app.use("/api/status", StatusRouter);
 }

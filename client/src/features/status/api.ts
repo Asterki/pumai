@@ -6,7 +6,7 @@ import ApiUtils from "../../utils/api";
 const baseUrl =
   import.meta.env.MODE === "development"
     ? import.meta.env.VITE_SERVER_URL + "/api/stats"
-    : "/api/stats";
+    : "/api/status";
 
 const axiosClient = axios.create({
   baseURL: baseUrl,

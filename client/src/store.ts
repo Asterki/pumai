@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 // Import reducers
-// import StatsFeature from "./features/stats";
+import StatusFeature from "./features/status";
 
 export const store = configureStore({
   reducer: {
-    // stats: StatsFeature.slice.reducer,
+    status: StatusFeature.slice.reducer,
   },
 });
 

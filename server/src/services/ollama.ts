@@ -21,12 +21,11 @@ class OllamaClient {
   }
 
   public async generateResponse(
-    model: string,
     prompt: string,
     options?: Record<string, any>,
   ) {
     const response = await this.client.chat({
-      model,
+      model: process.env.OLLAMA_MODEL || "deepseek-r1:14b",
       messages: [{ role: "user", content: prompt }],
       stream: false,
       ...options,

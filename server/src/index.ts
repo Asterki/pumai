@@ -14,9 +14,6 @@ import { traceIdMiddleware } from "./middleware/traceId";
 // import SessionsService from "./services/sessions";
 
 import SocketServer from "./services/socket";
-import OllamaService from "./services/ollama";
-
-// import TelegramBot from "./services/telegram";
 
 export async function startServer() {
   loadEnv();
@@ -49,8 +46,6 @@ export async function startServer() {
       res.sendFile(path.join(clientPath, "index.html"));
     });
   }
-
-  // new TelegramBot().getBot();
 
   // Services
   // const sessions = SessionsService.prototype.getInstance();

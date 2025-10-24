@@ -1,39 +1,69 @@
-import { createFileRoute } from '@tanstack/react-router'
-import logo from '../logo.svg'
+import { createFileRoute } from "@tanstack/react-router";
+import logo from "../logo.svg";
 
-export const Route = createFileRoute('/')({
-  component: App,
-})
+import { Layout, Button, Menu } from "antd";
+const { Header, Sider, Content, Footer } = Layout;
 
-function App() {
+import { MessageCirclePlus } from "lucide-react";
+
+import StatusFeature from "../features/status";
+
+import GeneralLayout from "../layouts/General";
+
+export const Route = createFileRoute("/")({
+  component: Page,
+});
+
+function Page() {
   return (
-    <div className="text-center">
-      <header className="min-h-screen flex flex-col items-center justify-center bg-[#282c34] text-white text-[calc(10px+2vmin)]">
-        <img
-          src={logo}
-          className="h-[40vmin] pointer-events-none animate-[spin_20s_linear_infinite]"
-          alt="logo"
-        />
-        <p>
-          Edit <code>src/routes/index.tsx</code> and save to reload.
-        </p>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://tanstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn TanStack
-        </a>
-      </header>
-    </div>
-  )
+    <>
+      <Header
+        className="px-4 flex items-center justify-between bg-white"
+        style={{ paddingInline: 16 }}
+      >
+        <h1 className="text-lg font-semibold text-white">PumAI</h1>
+      </Header>
+
+      {/* HERO */}
+      <div className="relative h-[70vh] flex flex-col items-center justify-center bg-[#253a69] text-white overflow-hidden">
+        <div>
+          <img src="/assets/img/puma.png" className="w-64" alt="" />
+          <h1 className="text-[100px] font-bold mb-4 text-white">
+            Pum
+            <span className="inline-block bg-linear-to-br bg-[linear-gradient(90deg,#00f5ff_0%,#0084ff_25%,#7b2ff7_50%,#ff00d4_75%,#00f5ff_100%)] bg-[length:300%_300%] bg-clip-text text-transparent animate-gradient font-mono">
+              AI
+            </span>
+          </h1>
+
+          <div className="flex items-center justify-center">
+            <Button type="primary" size="large" icon={<MessageCirclePlus />}>
+              Iniciar
+            </Button>
+          </div>
+        </div>
+
+        <div>
+          <img
+            src="/assets/img/sol-cut.png"
+            className="opacity-5 grayscale invert absolute top-0 left-0 w-full h-full object-cover"
+            alt=""
+          />
+        </div>
+
+        <div className="absolute bottom-10 left-10 w-1/4 md:w-1/12">
+          <img src="/assets/img/sellos.png" alt="Sellos" />
+        </div>
+
+        <div className="absolute bottom-10 right-10 w-1/4 md:w-1/12">
+          <img
+            src="/assets/img/nuevahistoria.png"
+            className="w-64"
+            alt="Nueva Historia"
+          />
+        </div>
+      </div>
+
+      <Footer>Creado con ❤️ por Fernando Rivera</Footer>
+    </>
+  );
 }
