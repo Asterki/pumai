@@ -1,3 +1,9 @@
+// API
+import * as AIAPITypes from "../../../../shared/types/api/ai";
+import * as schemas from "../../../../shared/zod-schemas/ai";
+import api from "./api";
+
+// Componentes
 import MessageComponent from "./components/Message";
 
 interface ChatMessage {
@@ -7,9 +13,10 @@ interface ChatMessage {
   timestamp?: number;
 }
 
-
-export type { ChatMessage };
+export type { AIAPITypes, ChatMessage };
 export default {
+  api,
+  schemas,
   components: {
     MessageComponent,
   },

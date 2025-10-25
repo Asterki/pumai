@@ -99,7 +99,7 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
         algorithm: theme.darkAlgorithm,
       }}
     >
-      <Layout className={`dark min-h-screen`}>
+      <Layout className={`dark`}>
         {/* Top Navbar */}
         <Header
           className="px-4 flex items-center justify-between bg-white dark:bg-neutral-800"
@@ -153,7 +153,7 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
           {/* Main Content */}
           <Layout style={{ background: "transparent" }}>
             <Content className="p-6 bg-white dark:bg-neutral-800 dark:text-white dark:border-neutral-700 border">
-              <div className="fixed top-0 left-0 z-0 w-full h-full overflow-hidden">
+              <div className="fixed top-0 left-0 z-0 w-full overflow-hidden">
                 {/* <img */}
                 {/*   src="/assets/img/sol-cut.png" */}
                 {/*   className="opacity-5 grayscale absolute top-0 left-0 w-full h-full object-cover" */}
