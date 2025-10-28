@@ -1,74 +1,32 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-
 import {
-  FaCashRegister,
-  FaBoxes,
-  FaWarehouse,
-  FaReceipt,
-  FaUndo,
-  FaBars,
-  FaMoneyCheckAlt,
-  FaUsers,
-  FaUserShield,
-  FaServer,
-  FaBookOpen,
-  FaScroll,
-  FaPercentage,
-  FaBell,
-  FaExchangeAlt,
-  FaTachometerAlt,
-  FaBoxOpen,
-  FaTags,
-  FaUtensils,
-  FaClipboardList,
-  FaFileInvoice,
-  FaTicketAlt,
-  FaUserFriends,
-  FaBrain,
-  FaShoppingCart,
-  FaTruckLoading,
-  FaMoneyBillWave,
-  FaFileInvoiceDollar,
-  FaChartBar,
-  FaStore,
-  FaIdBadge,
-  FaCog,
-  FaRegCheckCircle,
-  FaCube,
-  FaStarHalf,
-  FaRobot,
-  FaQuestionCircle,
-} from "react-icons/fa";
-
-import {
-  ConfigProvider,
-  theme,
   Layout,
   Menu,
   Drawer,
   Button,
-  Spin,
+  Tag,
+  ConfigProvider,
+  theme,
+  Avatar,
+  Space,
 } from "antd";
-const { Header, Sider, Content, Footer } = Layout;
+import { FaBars, FaRobot, FaQuestionCircle, FaCircle } from "react-icons/fa";
 import esES from "antd/locale/es_ES";
-
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import type { RootState } from "../store";
-import { unwrapResult } from "@reduxjs/toolkit";
-
 import { useTranslation } from "react-i18next";
-import { MenuItemType } from "antd/es/menu/interface";
+import type { MenuItemType } from "antd/es/menu/interface";
+
+const { Header, Sider, Content } = Layout;
 
 interface LayoutProps {
   children: React.ReactNode;
   selectedPage?: string;
 }
 
-export default function PageLayout({ children, selectedPage }: LayoutProps) {
+export default function GeneralLayout({ children, selectedPage }: LayoutProps) {
   const navigate = useNavigate();
-  const dispatch = useDispatch<typeof import("../store").store.dispatch>();
-
   const { t } = useTranslation(["main"]);
 
   const { status: serverConnectionStatus } = useSelector(
@@ -78,89 +36,159 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
 
+  const isConnected = serverConnectionStatus !== "succeeded";
+
   const menuItems: MenuItemType[] = [
-    // === Overview & Core ===
     {
       key: "chat",
-      label: <Link to="/chat">{t("dashboard:sidebar.chat")}</Link>,
+      label: <Link to="/chat">{t("dashboard:sidebar.chat") || "Chat"}</Link>,
       icon: <FaRobot />,
     },
     {
+      key: "settings",
+      label: (
+        <Link to="/settings">
+          {t("dashboard:sidebar.settings") || "Configuración"}
+        </Link>
+      ),
+      icon: <FaBars />,
+    },
+    {
+      key: "docrepo",
+      label: (
+        <Link to="/docrepo">
+          {t("dashboard:sidebar.docrepo") || "Repositorio de Documentos"}
+        </Link>
+      ),
+      icon: <FaBars />,
+    },
+    {
       key: "about",
-      label: <Link to="/about">{t("dashboard:sidebar.about")}</Link>,
-      icon: <FaQuestionCircle />, // Better for dashboards
+      label: (
+        <Link to="/about">{t("dashboard:sidebar.about") || "Acerca de"}</Link>
+      ),
+      icon: <FaQuestionCircle />,
     },
   ];
+
+  const SidebarMenu = (
+    <Menu
+      mode="inline"
+      selectedKeys={[selectedPage || "chat"]}
+      items={menuItems}
+      className="border-r-0"
+      onClick={({ key }) => {
+        navigate({ to: `/${key}` });
+        setDrawerVisible(false);
+      }}
+    />
+  );
 
   return (
     <ConfigProvider
       locale={esES}
       theme={{
         algorithm: theme.darkAlgorithm,
+        token: {
+          colorPrimary: "#1677ff",
+          colorBgBase: "#0d0d0d",
+          colorTextBase: "#e8e8e8",
+          borderRadius: 8,
+          fontSize: 15,
+        },
       }}
     >
-      <Layout className={`dark`}>
-        {/* Top Navbar */}
+      <Layout className="min-h-screen">
+        {/* HEADER */}
         <Header
-          className="px-4 flex items-center justify-between bg-white dark:bg-neutral-800"
-          style={{ paddingInline: 16 }}
+          style={{
+            background: "#141414",
+            borderBottom: "1px solid #222",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingInline: 16,
+          }}
+          className="h-15 z-10"
         >
-          <Button
-            type="text"
-            icon={<FaBars />}
-            onClick={() => setDrawerVisible(true)}
-            className="md:hidden text-xl"
-          />
-          <h1 className="text-lg font-semibold text-black dark:text-white">
-            {t("dashboard:sidebar.title")}
-          </h1>
+          <Space align="center">
+            <Button
+              type="text"
+              icon={<FaBars />}
+              onClick={() => setDrawerVisible(true)}
+              className="md:hidden block text-lg"
+            />
+            <h1 className="text-lg font-semibold text-white m-0">
+              {t(`dashboard:sidebar.${selectedPage}`)}
+            </h1>
+          </Space>
+
+          <Space align="center" className="flex gap-2 items-center">
+            <Tag color={isConnected ? "green" : "red"}>
+              <div className="px-2 py-1 flex items-center gap-2">
+                <FaCircle size={8} className="animate-pulse" />
+                {isConnected ? "Conectado" : "Desconectado"}
+              </div>
+            </Tag>
+
+            <Avatar
+              style={{
+                backgroundColor: "#1677ff",
+                cursor: "pointer",
+              }}
+            >
+              AI
+            </Avatar>
+          </Space>
         </Header>
 
         <Layout hasSider>
-          {/* Sidebar for desktop */}
+          {/* SIDEBAR (Desktop) */}
           <Sider
-            breakpoint="md"
+            theme="dark"
+            width={240}
             collapsible
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
-            className="hidden md:block"
-            theme={"dark"}
-            width={220}
+            className="z-10 hidden md:flex flex-col"
+            style={{
+              background: "#141414",
+              borderRight: "1px solid #222",
+            }}
           >
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={[selectedPage || "dashboard"]}
-              items={menuItems}
-              className="h-full"
-            />
+            <div className="font-bold text-2xl py-5 text-center text-gray-300 border-b border-white/10 tracking-wide">
+              <h1 className="text-2xl font-bold text-white">
+                Pum
+                <span className="inline-block bg-linear-to-br bg-[linear-gradient(90deg,#00f5ff_0%,#0084ff_25%,#7b2ff7_50%,#ff00d4_75%,#00f5ff_100%)] bg-[length:300%_300%] bg-clip-text text-transparent animate-gradient font-mono">
+                  AI
+                </span>
+              </h1>
+            </div>
+
+            {SidebarMenu}
+            <div className="opacity-10 left-0 overflow-hidden bottom-1/12 absolute">
+              <img src="/assets/img/lucem.png" className="grayscale" alt="" />
+            </div>
           </Sider>
 
-          {/* Sidebar Drawer for mobile */}
+          {/* DRAWER (Mobile) */}
           <Drawer
             title="Menú"
             placement="left"
+            closable
             onClose={() => setDrawerVisible(false)}
             open={drawerVisible}
           >
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={[selectedPage || "dashboard"]}
-              items={menuItems}
-              onClick={() => setDrawerVisible(false)}
-            />
+            {SidebarMenu}
           </Drawer>
 
-          {/* Main Content */}
-          <Layout style={{ background: "transparent" }}>
-            <Content className="p-6 bg-white dark:bg-neutral-800 dark:text-white dark:border-neutral-700 border">
-              <div className="fixed top-0 left-0 z-0 w-full overflow-hidden">
-                {/* <img */}
-                {/*   src="/assets/img/sol-cut.png" */}
-                {/*   className="opacity-5 grayscale absolute top-0 left-0 w-full h-full object-cover" */}
-                {/*   alt="" */}
-                {/* /> */}
-              </div>
-
+          {/* MAIN CONTENT */}
+          <Layout>
+            <Content
+              style={{
+                minHeight: "calc(100vh - 60px)",
+              }}
+            >
               {children}
             </Content>
           </Layout>

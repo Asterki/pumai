@@ -12,6 +12,7 @@ import MongoDBClient from "./config/mongodb";
 import { registerRoutes } from "./routes";
 import { traceIdMiddleware } from "./middleware/traceId";
 // import SessionsService from "./services/sessions";
+import ChromaService from "./services/chroma";
 
 import SocketServer from "./services/socket";
 
@@ -48,8 +49,7 @@ export async function startServer() {
   }
 
   // Services
-  // const sessions = SessionsService.prototype.getInstance();
-  // sessions.loadToServer(app);
+  await ChromaService.getInstance().getCollection();
 
   registerRoutes(app);
   new MongoDBClient(process.env.MONGODB_URI!).connect();
