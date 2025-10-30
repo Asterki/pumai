@@ -102,7 +102,7 @@ function Page() {
         {/* Chat messages */}
         <div
           ref={containerRef}
-          className="flex flex-col gap-4 p-6 md:px-20 overflow-y-auto flex-1 relative z-10 scrollbar-thin scrollbar-thumb-gray-700/50"
+          className="flex flex-col gap-4 p-6 md:px-40 overflow-y-auto flex-1 relative z-10 scrollbar-thin scrollbar-thumb-gray-700/50"
         >
           {messages.map((msg, i) => (
             <AIFeature.components.MessageComponent key={i} {...msg} />
@@ -113,15 +113,6 @@ function Page() {
               <Spin tip="Pensando..." />
             </div>
           )}
-        </div>
-
-        {/* Floating background */}
-        <div className="absolute inset-0 z-0 opacity-10 grayscale pointer-events-none select-none">
-          <img
-            src="/assets/img/sol-cut.png"
-            alt=""
-            className="w-full h-full object-cover scale-x-[-1] select-none pointer-events-none"
-          />
         </div>
 
         {/* Input area */}
