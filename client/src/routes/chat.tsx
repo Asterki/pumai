@@ -1,101 +1,148 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { Input, Button, Spin, message as antdMessage } from "antd";
+import { FaPaperPlane } from "react-icons/fa";
 
-import { Button, Menu, Input, UploadFile, Image } from "antd";
-
-import StatusFeature from "../features/status";
 import AIFeature, { ChatMessage } from "../features/ai";
-
 import GeneralLayout from "../layouts/General";
-import { FaChartLine, FaLink, FaPaperPlane } from "react-icons/fa";
 
 export const Route = createFileRoute("/chat")({
   component: Page,
 });
 
 function Page() {
-  const [currentMessages, setCurrentMessages] = React.useState<ChatMessage[]>([
+  const [messages, setMessages] = React.useState<ChatMessage[]>([
     {
       source: "api",
-      content: "Hola, ¿en qué puedo ayudarte hoy?",
       role: "assistant",
+      content: "Hola 👋 ¿en qué puedo ayudarte hoy?",
       timestamp: Date.now(),
     },
   ]);
 
-  const sendMessage = async (message: string) => {
-    const newMessage: ChatMessage = {
+  const [input, setInput] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom when new messages come in
+  React.useEffect(() => {
+    const container = containerRef.current;
+    if (container) container.scrollTop = container.scrollHeight;
+  }, [messages]);
+
+  const sendMessage = async () => {
+    const trimmed = input.trim();
+    if (!trimmed) return;
+
+    const userMsg: ChatMessage = {
       source: "local",
-      content: message,
       role: "user",
+      content: trimmed,
       timestamp: Date.now(),
     };
 
-    setCurrentMessages((prevMessages) => [...prevMessages, newMessage]);
+    setMessages((prev) => [...prev, userMsg]);
+    setInput("");
+    setLoading(true);
 
-    const result = await AIFeature.api.generate({ prompt: message });
-    if (result.status === "success") {
-      const aiMessage: ChatMessage = {
-        source: "api",
-        content: result.result,
-        role: "assistant",
-        timestamp: Date.now(),
-      };
-      setCurrentMessages((prevMessages) => [...prevMessages, aiMessage]);
+    try {
+      const stream = await AIFeature.api.generate({ prompt: trimmed });
+
+      if (stream && stream instanceof ReadableStream) {
+        let aiText = "";
+        const reader = stream.getReader();
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          const chunk = new TextDecoder().decode(value);
+          aiText += chunk;
+
+          setMessages((prev) => {
+            const copy = [...prev];
+            const last = copy[copy.length - 1];
+            if (last.role === "assistant") last.content = aiText;
+            else
+              copy.push({
+                role: "assistant",
+                source: "api",
+                content: aiText,
+                timestamp: Date.now(),
+              });
+            return copy;
+          });
+        }
+      } else {
+        const result = await AIFeature.api.generate({ prompt: trimmed });
+        if (result.status === "success") {
+          setMessages((prev) => [
+            ...prev,
+            {
+              source: "api",
+              role: "assistant",
+              content: result.result,
+              timestamp: Date.now(),
+            },
+          ]);
+        } else {
+          antdMessage.error("Error generando respuesta del modelo.");
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      antdMessage.error("Error al comunicar con el modelo AI.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <GeneralLayout selectedPage="chat">
-      <div className="flex flex-col w-full">
-        <div className="relative flex flex-col items-center w-full mx-auto h-[90vh] rounded-lg overflow-hidden">
-          {/* Chat messages */}
-          <div className="flex flex-col gap-2 overflow-y-auto pb-32 w-full md:px-[15vw] px-4">
-            {currentMessages.map((message, index) => (
-              <AIFeature.components.MessageComponent
-                key={index}
-                source={message.source}
-                content={message.content}
-                role={message.role}
-              />
-            ))}
-          </div>
+      <div className="relative flex flex-col h-[90vh] rounded-xl overflow-hidden text-white">
+        {/* Chat messages */}
+        <div
+          ref={containerRef}
+          className="flex flex-col gap-4 p-6 md:px-40 overflow-y-auto flex-1 relative z-10 scrollbar-thin scrollbar-thumb-gray-700/50"
+        >
+          {messages.map((msg, i) => (
+            <AIFeature.components.MessageComponent key={i} {...msg} />
+          ))}
 
-          <div className="absolute bottom-0 left-0 w-full p-4 bg-neutral-900 rounded-lg border border-neutral-700 flex flex-col gap-2">
-            <Input.TextArea
-              rows={4}
-              autoSize={{
-                maxRows: 8,
-                minRows: 1,
-              }}
-              variant="borderless"
-              styles={{ textarea: { padding: "10px" } }}
-              placeholder="Pregunta cualquier cosa..."
-              className="w-full"
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  const target = e.target as HTMLTextAreaElement;
-                  const message = target.value.trim();
-                  if (message) {
-                    sendMessage(message);
-                    target.value = "";
-                  }
-                }
-              }}
-            />
-
-            <div className="flex items-center gap-2 w-full justify-end">
-              <Button icon={<FaLink />} />
-              <Button icon={<FaChartLine />} />
-              <Button icon={<FaPaperPlane />} type="primary">
-                Enviar
-              </Button>
+          {loading && (
+            <div className="flex justify-center py-4">
+              <Spin tip="Pensando..." />
             </div>
-          </div>
+          )}
         </div>
 
-        <div></div>
+        {/* Input area */}
+        <div className="relative z-10 border-t border-white/10 bg-white/10 backdrop-blur-xl p-4 flex items-end gap-3">
+          <Input.TextArea
+            autoSize={{ maxRows: 6 }}
+            placeholder="Escribe tu mensaje..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onPressEnter={(e) => {
+              if (!e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+              }
+            }}
+            classNames={{
+              textarea:
+                "bg-transparent text-white placeholder:text-neutral-400 border-none focus:ring-0 resize-none",
+            }}
+          />
+          <Button
+            type="primary"
+            icon={<FaPaperPlane />}
+            loading={loading}
+            onClick={sendMessage}
+            className="!bg-blue-500 hover:!bg-blue-600 rounded-full px-5 py-2 font-medium shadow-lg"
+          >
+            Enviar
+          </Button>
+        </div>
       </div>
     </GeneralLayout>
   );

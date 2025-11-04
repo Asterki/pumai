@@ -1,39 +1,6 @@
-// === Step 2: Query the collection ===
-// async function ask(question) {
-//   console.log(`\n❓ Question: ${question}`);
-//
-//   const queryEmbedding = await ollama.embed({
-//     model: "nomic-embed-text",
-//     input: question,
-//   });
-//
-//   const results = await collection.query({
-//     queryEmbeddings: [queryEmbedding.embedding],
-//     nResults: 3,
-//   });
-//
-//   const context = results.documents.join("\n---\n");
-//
-//   const response = await ollama.generate({
-//     model: "deepseek-r1:14b",
-//     prompt: `You are an assistant that answers using the context below.
-// Context:
-// ${context}
-//
-// Question: ${question}
-//
-// Answer clearly using only relevant information.`,
-//   });
-//
-//   console.log(`\n💬 Answer:\n${response.response}`);
-// }
-//
-// // Example usage
-// await ask("What topics are covered in these documents?");
-
 import fs from "fs";
 import path from "path";
-import chroma, { ChromaClient } from "chromadb";
+import { ChromaClient } from "chromadb";
 
 import OllamaService from "./ollama";
 
@@ -67,6 +34,11 @@ class ChromaService {
   }
 
   private async loadCollections() {
+    // Delete the existing collection if it exists
+    this.client.deleteCollection({ name: "docs" }).catch(() => {
+      // Ignore error if collection does not exist
+    });
+
     this.collection = await this.client.getOrCreateCollection({
       name: "docs",
       embeddingFunction: OllamaService.getInstance().getEmbedder(),
