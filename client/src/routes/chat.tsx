@@ -46,48 +46,62 @@ function Page() {
     setLoading(true);
 
     try {
-      const stream = await AIFeature.api.generate({ prompt: trimmed });
+      // const result = await AIFeature.api.generateStream({
+      //   prompt: trimmed,
+      // });
+      // const stream = result
+      //
+      // // @ts-ignore
+      // stream.on("data", (chunk: any) => {
+      //   console.log("chunk", chunk.toString())
+      // })
 
-      if (stream && stream instanceof ReadableStream) {
-        let aiText = "";
-        const reader = stream.getReader();
-
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          const chunk = new TextDecoder().decode(value);
-          aiText += chunk;
-
-          setMessages((prev) => {
-            const copy = [...prev];
-            const last = copy[copy.length - 1];
-            if (last.role === "assistant") last.content = aiText;
-            else
-              copy.push({
-                role: "assistant",
-                source: "api",
-                content: aiText,
-                timestamp: Date.now(),
-              });
-            return copy;
-          });
-        }
+      const result = await AIFeature.api.generate({
+        prompt: trimmed,
+        chat: messages,
+      });
+      if (result.status === "success") {
+        setMessages((prev) => [
+          ...prev,
+          {
+            source: "api",
+            role: "assistant",
+            content: result.result,
+            timestamp: Date.now(),
+          },
+        ]);
       } else {
-        const result = await AIFeature.api.generate({ prompt: trimmed });
-        if (result.status === "success") {
-          setMessages((prev) => [
-            ...prev,
-            {
-              source: "api",
-              role: "assistant",
-              content: result.result,
-              timestamp: Date.now(),
-            },
-          ]);
-        } else {
-          antdMessage.error("Error generando respuesta del modelo.");
-        }
+        antdMessage.error("Error generando respuesta del modelo.");
       }
+
+      // const stream = false;
+      // if (stream && stream instanceof ReadableStream) {
+      //   console.log("result", result);
+      //   let aiText = "";
+      //   const reader = stream.getReader();
+      //
+      //   while (true) {
+      //     const { value, done } = await reader.read();
+      //     if (done) break;
+      //     const chunk = new TextDecoder().decode(value);
+      //     aiText += chunk;
+      //
+      //     setMessages((prev) => {
+      //       const copy = [...prev];
+      //       const last = copy[copy.length - 1];
+      //       if (last.role === "assistant") last.content = aiText;
+      //       else
+      //         copy.push({
+      //           role: "assistant",
+      //           source: "api",
+      //           content: aiText,
+      //           timestamp: Date.now(),
+      //         });
+      //       return copy;
+      //     });
+      //   }
+      // } else {
+      // }
     } catch (err) {
       console.error(err);
       antdMessage.error("Error al comunicar con el modelo AI.");

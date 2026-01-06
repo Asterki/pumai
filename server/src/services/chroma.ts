@@ -1,13 +1,13 @@
 import fs from "fs";
 import path from "path";
-import { ChromaClient } from "chromadb";
+import { ChromaClient, Collection } from "chromadb";
 
-import OllamaService from "./ollama";
+import OllamaEmbeddingService from "./ollama/embed";
 
 class ChromaService {
   private readonly docsDir: string = path.resolve("./data/docs");
   private client: ChromaClient = new ChromaClient({});
-  private collection: any;
+  private collection: Collection | null = null;
 
   private static instance: ChromaService | null = null;
 
@@ -17,7 +17,7 @@ class ChromaService {
   }
 
   constructor() {
-    this.loadCollections();
+    this.loadFilesToCollection();
 
     // Create the database in case of not existing
     if (!fs.existsSync("./chroma-database")) {
@@ -33,15 +33,14 @@ class ChromaService {
     return this.collection;
   }
 
-  private async loadCollections() {
-    // Delete the existing collection if it exists
-    this.client.deleteCollection({ name: "docs" }).catch(() => {
-      // Ignore error if collection does not exist
-    });
+  public deleteCollection() {
+    return this.client.deleteCollection({ name: "docs" });
+  }
 
+  private async loadFilesToCollection() {
     this.collection = await this.client.getOrCreateCollection({
       name: "docs",
-      embeddingFunction: OllamaService.getInstance().getEmbedder(),
+      embeddingFunction: OllamaEmbeddingService.getInstance().getEmbedder(),
     });
 
     for (const file of fs.readdirSync(this.docsDir)) {
@@ -50,10 +49,8 @@ class ChromaService {
       const filePath = path.join(this.docsDir, file);
       const text = fs.readFileSync(filePath, "utf8");
 
-      console.log(`Embedding: ${file} (${text.length} chars)`);
-
       // Create an embedding for the file content
-      const embedding = await OllamaService.getInstance().embedText(text);
+      const embedding = await OllamaEmbeddingService.getInstance().embedText(text);
 
       await this.collection.add({
         ids: [file],
