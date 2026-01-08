@@ -1,7 +1,0 @@
-Los tipos de beca disponibles son: 
-- Tipo A: Mantener un promedio mínimo de 90%.
-- Tipo B: Mantener un promedio mínimo de 80%. 
-- Apoyo al alma Mater: Dirigido a estudiantes con necesidades económicas especiales, con promedio mínimo de 75%. 
-
-Junto a ello, tendrás que cumplir con los siguientes requisitos generales: 
-- 20 horas de servicio comunitario al mes.
