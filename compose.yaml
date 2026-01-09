@@ -29,43 +29,43 @@ services:
       '
       "
     restart: "no"
-
-  redis:
-    image: redis:7
-    container_name: pumai-redis
-    restart: always
-    ports:
-      - "6379:6379"
-    command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - redis-data:/data
-
-  ollama:
-    image: ollama/ollama:latest
-    ports:
-      - "11435:11434"
-    volumes:
-      - ollama:/root/.ollama
-    restart: unless-stopped
-    runtime: nvidia
-
-  server:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: pumai-app
-    depends_on:
-      - mongo
-      - mongoinit
-      - redis
-    environment:
-      - NODE_ENV=production
-    volumes:
-      - ./.env.prod:/app/server/.env.prod
-    ports:
-      - "3000:80"
-    restart: always
-    command: ["sh", "-c", "sleep 5 && npm run start"]
+  #
+  # redis:
+  #   image: redis:7
+  #   container_name: pumai-redis
+  #   restart: always
+  #   ports:
+  #     - "6379:6379"
+  #   command: ["redis-server", "--appendonly", "yes"]
+  #   volumes:
+  #     - redis-data:/data
+  #
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   ports:
+  #     - "11435:11434"
+  #   volumes:
+  #     - ollama:/root/.ollama
+  #   restart: unless-stopped
+  #   runtime: nvidia
+  #
+  # server:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: pumai-app
+  #   depends_on:
+  #     - mongo
+  #     - mongoinit
+  #     - redis
+  #   environment:
+  #     - NODE_ENV=production
+  #   volumes:
+  #     - ./.env.prod:/app/server/.env.prod
+  #   ports:
+  #     - "3000:80"
+  #   restart: always
+  #   command: ["sh", "-c", "sleep 5 && npm run start"]
 
   chroma:
     image: ghcr.io/chroma-core/chroma:latest

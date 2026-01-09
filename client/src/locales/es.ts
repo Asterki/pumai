@@ -21,6 +21,45 @@ const translation = {
       "La consulta proporcionada es demasiado larga. Por favor, reduzca la longitud de la consulta.",
   },
 
+  features: {
+    preferences: {
+      components: {
+        PreferencesModal: {
+          title: "Preferencias de Usuario",
+          buttons: {
+            cancel: "Cancelar",
+            save: "Guardar",
+          },
+          fields: {
+            name: {
+              label: "Nombre de Usuario",
+              placeholder: "Ingrese su nombre de usuario",
+            },
+            location: {
+              label: "Ubicación",
+              options: {
+                "UNAH-Comayagua": "UNAH Comayagua",
+                "UNAH-Tegucigalpa": "UNAH Tegucigalpa",
+              },
+            },
+            theme: {
+              label: "Tema",
+              options: {
+                dark: "Oscuro",
+                light: "Claro",
+              },
+            },
+          },
+          messages: {
+            success: "Preferencias guardadas exitosamente.",
+            error:
+              "Error al guardar las preferencias. Por favor, intente nuevamente.",
+          },
+        },
+      },
+    },
+  },
+
   dashboard: {
     componentes: {
       navbar: {},

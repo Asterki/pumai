@@ -5,7 +5,7 @@ import { ChromaClient, Collection } from "chromadb";
 import OllamaEmbeddingService from "./ollama/embed";
 
 class ChromaService {
-  private readonly docsDir: string = path.resolve("./data/docs");
+  private readonly docsDir: string = path.resolve("./data/rag-documents");
   private client: ChromaClient = new ChromaClient({});
   private collection: Collection | null = null;
 
@@ -18,11 +18,6 @@ class ChromaService {
 
   constructor() {
     this.loadFilesToCollection();
-
-    // Create the database in case of not existing
-    if (!fs.existsSync("./chroma-database")) {
-      fs.mkdirSync("./chroma-database");
-    }
   }
 
   public getClient() {
@@ -34,12 +29,12 @@ class ChromaService {
   }
 
   public deleteCollection() {
-    return this.client.deleteCollection({ name: "docs" });
+    return this.client.deleteCollection({ name: "rag-documents" });
   }
 
   private async loadFilesToCollection() {
     this.collection = await this.client.getOrCreateCollection({
-      name: "docs",
+      name: "rag-documents",
       embeddingFunction: OllamaEmbeddingService.getInstance().getEmbedder(),
     });
 
@@ -50,7 +45,8 @@ class ChromaService {
       const text = fs.readFileSync(filePath, "utf8");
 
       // Create an embedding for the file content
-      const embedding = await OllamaEmbeddingService.getInstance().embedText(text);
+      const embedding =
+        await OllamaEmbeddingService.getInstance().embedText(text);
 
       await this.collection.add({
         ids: [file],
