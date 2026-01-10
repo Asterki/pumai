@@ -10,8 +10,8 @@ export type PreferencesModalState = IPreferences & {
 };
 
 export function usePreferencesModal({ onSuccess }: { onSuccess: () => void }) {
-  const { t } = useTranslation(["main"], {
-    keyPrefix: "features.preferences.hooks.usePreferencesModal",
+  const { t } = useTranslation(["features"], {
+    keyPrefix: "preferences.hooks.usePreferencesModal",
   });
   const { message } = App.useApp();
 
@@ -47,9 +47,20 @@ export function usePreferencesModal({ onSuccess }: { onSuccess: () => void }) {
     }
   }, [state, message, t]);
 
+  const openModal = useCallback(async () => {
+    const currentPreferences =
+      await PreferencesFeature.storage.getPreferences();
+    setState((prev) => ({
+      ...prev,
+      ...currentPreferences,
+      isOpen: true,
+    }));
+  }, []);
+
   return {
     state,
     setState,
     savePreferences,
+    openModal,
   };
 }

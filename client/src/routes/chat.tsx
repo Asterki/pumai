@@ -19,16 +19,6 @@ export const Route = createFileRoute("/chat")({
 });
 
 function Page() {
-  const [locationSelector, setLocationSelector] = React.useState<{
-    location: "UNAH-Comayagua" | "CU" | "UNAH-VS";
-    modalOpen: boolean;
-    saveLocation: boolean;
-  }>({
-    modalOpen: false,
-    location: "UNAH-Comayagua",
-    saveLocation: false,
-  });
-
   const [messages, setMessages] = React.useState<ChatMessage[]>([
     {
       source: "api",
@@ -128,77 +118,8 @@ function Page() {
     }
   };
 
-  React.useEffect(() => {
-    // Load saved location
-    const savedLocation = localStorage.getItem("user-location") as
-      | "UNAH-Comayagua"
-      | "CU"
-      | "UNAH-VS"
-      | null;
-    if (savedLocation) {
-      setLocationSelector((prev) => ({
-        ...prev,
-        location: savedLocation,
-        modalOpen: false,
-      }));
-    }
-  }, []);
-
-  React.useEffect(() => {
-    // Save location if needed
-    if (locationSelector.saveLocation) {
-      localStorage.setItem("user-location", locationSelector.location);
-    }
-  }, [locationSelector]);
-
   return (
     <GeneralLayout selectedPage="chat">
-      <Modal
-        title="¿De dónde nos visitas?"
-        open={locationSelector.modalOpen}
-        closable={false}
-        footer={
-          <div className="flex items-center justify-between">
-            <Checkbox
-              onChange={(e) =>
-                setLocationSelector((prev) => ({
-                  ...prev,
-                  saveLocation: e.target.checked,
-                }))
-              }
-              checked={locationSelector.saveLocation}
-            >
-              Recordar mi ubicación
-            </Checkbox>
-            <Button
-              type="primary"
-              onClick={() =>
-                setLocationSelector((prev) => ({
-                  ...prev,
-                  modalOpen: false,
-                }))
-              }
-              className="ml-4"
-            >
-              Confirmar
-            </Button>
-          </div>
-        }
-        centered
-      >
-        <Select
-          defaultValue={locationSelector.location}
-          style={{ width: "100%" }}
-          onChange={(value) =>
-            setLocationSelector({ ...locationSelector, location: value as any })
-          }
-          options={[
-            { value: "UNAH-Comayagua", label: "UNAH Campus Comayagua" },
-            { value: "CU", label: "Ciudad Universitaria" },
-            { value: "UNAH-VS", label: "UNAH Valle de Sula" },
-          ]}
-        />
-      </Modal>
       <div className="relative flex flex-col h-[90vh] rounded-xl overflow-hidden text-white">
         {/* Chat messages */}
         <div
@@ -231,7 +152,7 @@ function Page() {
             }}
             classNames={{
               textarea:
-                "bg-transparent text-white placeholder:text-neutral-400 border-none focus:ring-0 resize-none",
+                "bg-transparent dark:text-white placeholder:text-neutral-400 border-none focus:ring-0 resize-none",
             }}
           />
           <Button
@@ -246,7 +167,7 @@ function Page() {
         </div>
       </div>
 
-      <p className="mt-2 text-center text-sm text-gray-400">
+      <p className="mt-2 text-center text-sm dark:text-gray-400">
         La información proporcionada por este chat AI es solo para fines
         informativos. Por favor, verifica cualquier dato crítico con fuentes
         oficiales.

@@ -57,6 +57,26 @@ const translation = {
           },
         },
       },
+      hooks: {
+        usePreferencesModal: {
+          messages: {
+            success: "Preferencias guardadas exitosamente. Recargando...",
+            error:
+              "Error al guardar las preferencias. Por favor, intente nuevamente.",
+          },
+        },
+      },
+    },
+  },
+
+  layouts: {
+    general: {
+      sidebar: {
+        preferences: "Preferencias",
+        docrepo: "Repositorio de Documentos",
+        chat: "Chat",
+        about: "Acerca de",
+      },
     },
   },
 
@@ -68,6 +88,7 @@ const translation = {
     sidebar: {
       title: "Dashboard",
       chat: "Chat",
+      preferences: "Preferencias",
       about: "Acerca de",
     },
   },

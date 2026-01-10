@@ -4,7 +4,7 @@ import { AppDispatch } from "./store";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 
 import { store } from "./store";
-// import ConfigFeature from "./features/config";
+import PreferencesFeature from "./features/preferences";
 import { routeTree } from "./routeTree.gen";
 // import Route404 from "./routes/errors/404";
 import { Context } from "./Context";
@@ -24,9 +24,9 @@ declare module "@tanstack/react-router" {
 const AppInitializer = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  // useEffect(() => {
-  //   dispatch(ConfigFeature.actions.fetchConfig()); // Fetch config on app load
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(PreferencesFeature.actions.fetchPreferences()); // Fetch config on app load
+  }, [dispatch]);
 
   return <>{children}</>;
 };
