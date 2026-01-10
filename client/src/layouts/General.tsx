@@ -130,21 +130,73 @@ export default function GeneralLayout({
     />
   );
 
+  const darkTheme = {
+    algorithm: theme.darkAlgorithm,
+    token: {
+      // Primary
+      colorPrimary: "#1e3976",
+
+      // Backgrounds
+      colorBgBase: "#0f1115", // app background (almost black)
+      colorBgLayout: "#0f1115",
+      colorBgContainer: "#16181d", // cards, sider, header
+      colorBgElevated: "#1d2026", // dropdowns, modals, popovers
+      colorBgSpotlight: "#262a33", // highlights, selected items
+
+      // Text
+      colorTextBase: "#e6e9f0",
+      colorTextSecondary: "#b8c1d9",
+
+      // Borders
+      colorBorder: "#262a33",
+      colorSplit: "#262a33",
+
+      // Status
+      colorSuccess: "#366533",
+      colorWarning: "#f0b92d",
+      colorError: "#8a1518",
+      colorInfo: "#5facc5",
+
+      // UI
+      borderRadius: 8,
+      fontSize: 15,
+    },
+  };
+
+  const lightTheme = {
+    algorithm: theme.defaultAlgorithm,
+    token: {
+      // Primary
+      colorPrimary: "#1e3976",
+
+      // Backgrounds
+      colorBgBase: "#ffffff",
+      colorBgContainer: "#ffffff",
+      colorBgLayout: "#f5f7fb",
+
+      // Text
+      colorTextBase: "#1f2937",
+      colorTextSecondary: "#4b5563",
+
+      // Borders
+      colorBorder: "#e5e7eb",
+
+      // Status
+      colorSuccess: "#366533",
+      colorWarning: "#f0b92d",
+      colorError: "#8a1518",
+      colorInfo: "#5facc5",
+
+      // UI
+      borderRadius: 8,
+      fontSize: 15,
+    },
+  };
+
   return (
     <ConfigProvider
       locale={esES}
-      theme={{
-        algorithm: userPreferences
-          ? userPreferences.theme == "dark"
-            ? theme.darkAlgorithm
-            : undefined
-          : theme.darkAlgorithm,
-        token: {
-          colorPrimary: "#1677ff",
-          borderRadius: 8,
-          fontSize: 15,
-        },
-      }}
+      theme={userPreferences?.theme === "dark" ? darkTheme : lightTheme}
     >
       <PreferencesFeature.components.PreferencesModal
         state={preferencesModalState}
@@ -230,7 +282,7 @@ export default function GeneralLayout({
             collapsible
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
-            className="z-10 hidden md:flex flex-col"
+            className="z-20 hidden md:flex flex-col"
             theme={userPreferences?.theme === "dark" ? "dark" : "light"}
           >
             <div style={{ padding: "12px 8px", flex: 1, overflow: "auto" }}>
@@ -261,21 +313,12 @@ export default function GeneralLayout({
           <Layout style={{ background: "transparent" }}>
             <Content
               style={{
-                minHeight: "calc(100vh - 4px)",
-                padding: 20,
+                minHeight: "calc(100vh - 64px)",
                 background: "transparent",
               }}
+              className="relative"
             >
-              <div
-                style={{
-                  border: "1px solid rgba(255,255,255,0.03)",
-                  borderRadius: 12,
-                  padding: 18,
-                  minHeight: "100%",
-                }}
-              >
-                {children}
-              </div>
+              {children}
             </Content>
           </Layout>
         </Layout>
