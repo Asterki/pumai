@@ -14,6 +14,8 @@ import { FaPaperPlane } from "react-icons/fa";
 import AIFeature, { ChatMessage } from "../features/ai";
 import GeneralLayout from "../layouts/General";
 
+import { useTranslation } from "react-i18next";
+
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 
@@ -22,6 +24,10 @@ export const Route = createFileRoute("/chat")({
 });
 
 function Page() {
+  const { t } = useTranslation(["pages"], {
+    keyPrefix: "chat",
+  });
+
   const { preferences: userPreferences } = useSelector(
     (state: RootState) => state.preferences,
   );
@@ -150,7 +156,7 @@ function Page() {
           <div className="md:p-4 p-2 flex items-end md:gap-3 gap-2">
             <Input.TextArea
               autoSize={{ maxRows: 6 }}
-              placeholder="Escribe tu mensaje..."
+              placeholder={t("input.placeholder")}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onPressEnter={(e) => {
@@ -171,15 +177,13 @@ function Page() {
               onClick={sendMessage}
               className="rounded-full px-5 py-2 font-medium"
             >
-              <div className="hidden sm:block">Enviar</div>
+              <div className="hidden sm:block">{t("input.sendButton")}</div>
             </Button>
           </div>
 
           {/* Disclaimer */}
           <p className="mb-2 text-center text-sm text-gray-400">
-            La información proporcionada por este chat AI es solo para fines
-            informativos. Por favor, verifica cualquier dato crítico con fuentes
-            oficiales.
+            {t("disclaimer")}
           </p>
         </div>
       </div>

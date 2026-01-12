@@ -13,7 +13,7 @@ const handler = async (
   _next: NextFunction,
 ) => {
   // TODO: Expand this
-  const { prompt } = req.parsedBody;
+  const { prompt, chat } = req.parsedBody;
 
   const context = await OllamaEmbeddingService.getInstance().getContext(prompt);
   const finalPrompt = OllamaChatService.getInstance().getFinalPrompt(
@@ -21,12 +21,13 @@ const handler = async (
     prompt,
   );
 
-  const result: ChatResponse = await OllamaChatService.getInstance().generateChat<ChatResponse>(
-    finalPrompt,
-    [],
-    false,
-    { temperature: 0.2 },
-  );
+  const result: ChatResponse =
+    await OllamaChatService.getInstance().generateChat<ChatResponse>(
+      finalPrompt,
+      chat,
+      false,
+      { temperature: 0.2 },
+    );
 
   res.status(200).json({ status: "success", result: result.message.content });
 };

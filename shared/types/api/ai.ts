@@ -1,9 +1,9 @@
-import { ResponseStatus } from "../../models";
+import { z } from "zod";
 
-export type GenerateRequestBody = {
-  prompt: string;
-  chat?: { role: "system" | "user" | "assistant"; content: string }[];
-};
+import { ResponseStatus } from "../../models";
+import { generateSchema } from "../../schemas/ai";
+
+export type GenerateRequestBody = z.infer<typeof generateSchema>;
 
 // Response types
 export interface GenerateResponseData {

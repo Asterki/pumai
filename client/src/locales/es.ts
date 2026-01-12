@@ -80,6 +80,18 @@ const translation = {
     },
   },
 
+  pages: {
+    chat: {
+      title: "Chat AI",
+      input: {
+        placeholder: "Escribe tu mensaje...",
+        sendButton: "Enviar",
+      },
+      disclaimer:
+        "La información proporcionada por este chat AI es solo para fines informativos. Por favor, verifica cualquier dato crítico con fuentes autorizadas.",
+    },
+  },
+
   dashboard: {
     componentes: {
       navbar: {},
