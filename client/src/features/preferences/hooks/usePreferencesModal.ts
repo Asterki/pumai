@@ -21,6 +21,7 @@ export function usePreferencesModal({ onSuccess }: { onSuccess: () => void }) {
     name: "",
     location: "UNAH-Comayagua",
     theme: "dark",
+    replyStyle: "formal",
   };
 
   const [state, setState] = useState<PreferencesModalState>(defaultState);

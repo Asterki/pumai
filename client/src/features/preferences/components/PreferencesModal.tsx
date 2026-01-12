@@ -24,7 +24,9 @@ const PreferencesModal: React.FC<PreferencesModalProps> = ({
     <Modal
       open={state.isOpen}
       title={t("title")}
-      onCancel={() => {}}
+      onCancel={() => {
+        setState((prev) => ({ ...prev, isOpen: false }));
+      }}
       footer={[
         <Button
           key="cancel"
@@ -82,6 +84,25 @@ const PreferencesModal: React.FC<PreferencesModalProps> = ({
 
           <Select.Option value="light">
             {t("fields.theme.options.light")}
+          </Select.Option>
+        </Select>
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <label>{t("fields.replyStyles.label")}</label>
+        <Select
+          value={state.replyStyle}
+          onChange={(value) =>
+            setState((prev) => ({ ...prev, replyStyle: value }))
+          }
+          style={{ width: "100%" }}
+        >
+          <Select.Option value="formal">
+            {t("fields.replyStyles.options.formal")}
+          </Select.Option>
+
+          <Select.Option value="informal">
+            {t("fields.replyStyles.options.informal")}
           </Select.Option>
         </Select>
       </div>

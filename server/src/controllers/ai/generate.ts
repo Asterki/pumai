@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 
 import { TypedRequest } from "../../types";
-import * as AIAPITypes from "../../../../shared/types/api/ai";
+import * as AIAPITypes from "../../../../shared/api/ai";
 
 import OllamaChatService from "../../services/ollama/chat";
 import OllamaEmbeddingService from "../../services/ollama/embed";

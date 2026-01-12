@@ -32,8 +32,8 @@ const translation = {
           },
           fields: {
             name: {
-              label: "Nombre de Usuario",
-              placeholder: "Ingrese su nombre de usuario",
+              label: "Nombre",
+              placeholder: "Ingrese su nombre",
             },
             location: {
               label: "Ubicación",
@@ -49,11 +49,13 @@ const translation = {
                 light: "Claro",
               },
             },
-          },
-          messages: {
-            success: "Preferencias guardadas exitosamente.",
-            error:
-              "Error al guardar las preferencias. Por favor, intente nuevamente.",
+            replyStyles: {
+              label: "Estilo de Respuesta",
+              options: {
+                formal: "Formal",
+                informal: "Informal",
+              },
+            },
           },
         },
       },
