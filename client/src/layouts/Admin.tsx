@@ -7,6 +7,7 @@ import {
   FaCube,
   FaCubes,
   FaInbox,
+  FaFile,
   FaProjectDiagram,
   FaTachometerAlt,
   FaTerminal,
@@ -83,42 +84,7 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
     // if (!config?.masterServer.enabled) navigate({ to: '/nodes/register' })
   }, [config]);
 
-  const [tourOpen, setTourOpen] = useState(true);
   const sidebarRef = useRef(null);
-  const settingsButtonRef = useRef(null);
-  const steps: TourProps["steps"] = [
-    {
-      title: t("dashboard:tours.welcome.step1.title"),
-      description: t("dashboard:tours.welcome.step1.content"),
-      cover: (
-        <div className="flex items-center justify-center">
-          <img src="/logo.png" className="max-w-32 animate-bounce" />
-        </div>
-      ),
-    },
-    {
-      title: t("dashboard:tours.welcome.step2.title"),
-      description: t("dashboard:tours.welcome.step2.content"),
-      scrollIntoViewOptions: {
-        inline: "start",
-        behavior: "smooth",
-        block: "end",
-      },
-      placement: "right",
-      type: "primary",
-
-      target: () => sidebarRef.current,
-    },
-    {
-      title: t("dashboard:tours.welcome.step3.title"),
-      description: t("dashboard:tours.welcome.step3.content"),
-      scrollIntoViewOptions: { behavior: "smooth", block: "center" },
-      closable: false,
-      placement: "right",
-      type: "primary",
-      target: () => settingsButtonRef.current,
-    },
-  ];
 
   const hasPermission = (permission: Permission): boolean => {
     if (account) {
@@ -134,6 +100,12 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
 
   const menuItems: Array<MenuItemType> = [
     // === Overview & Core ===
+    {
+      key: "documents",
+      label: <Link to="/admin/documents">{t("sidebar.documents")}</Link>,
+      icon: <FaFile />, // Better for dashboards
+    },
+
     {
       key: "logs",
       label: <Link to="/">{t("sidebar.logs")}</Link>,
@@ -204,88 +176,79 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
     },
   };
 
+  const isDark = userPreferences?.theme === "dark";
+
   return (
     <ConfigProvider
       locale={esES}
-      theme={userPreferences?.theme === "dark" ? darkTheme : lightTheme}
+      theme={isDark ? darkTheme : lightTheme}
     >
-      <Layout className={`min-h-screen`}>
-        {/* Top Navbar */}
-        <Header
-          className="px-4 flex items-center justify-between bg-white dark:bg-neutral-800"
-          style={{ paddingInline: 16 }}
-        >
-          <Button
-            type="text"
-            icon={<FaBars />}
+      {/* Top Navbar */}
+      <Header
+        className={`px-4 flex items-center justify-between bg-white dark:bg-neutral-800 ${isDark ? "dark" : ""}`}
+        style={{ paddingInline: 16 }}
+      >
+        <div className="md:hidden block">
+          <button
             onClick={() => setDrawerVisible(true)}
-            className="md:hidden text-xl"
+            className="md:hidden text-xl block text-white"
+          >
+            <FaBars />
+          </button>
+        </div>
+        <h1 className="text-lg font-semibold text-black dark:text-white">
+          {t("sidebar.title")}
+        </h1>
+      </Header>
+
+      <Layout hasSider>
+        {/* Sidebar for desktop */}
+        <Sider
+          breakpoint="md"
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
+          className="hidden md:block"
+          theme={isDark ? "dark" : "light"}
+          width={220}
+          ref={sidebarRef}
+        >
+          <Menu
+            mode="inline"
+            defaultSelectedKeys={[selectedPage || "dashboard"]}
+            items={menuItems}
+            className="h-full"
           />
-          <h1 className="text-lg font-semibold text-black dark:text-white">
-            {t("dashboard:sidebar.title")}
-          </h1>
-        </Header>
+        </Sider>
 
-        <Layout hasSider>
-          {/* Sidebar for desktop */}
-          <Sider
-            breakpoint="md"
-            collapsible
-            collapsed={collapsed}
-            onCollapse={(value) => setCollapsed(value)}
-            className="hidden md:block"
-            width={220}
-            ref={sidebarRef}
-          >
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={[selectedPage || "dashboard"]}
-              items={menuItems}
-              className="h-full"
-            />
-          </Sider>
+        {/* Sidebar Drawer for mobile */}
+        <Drawer
+          title="Menú"
+          placement="left"
+          // This code is responsible for opening and closing the drawer menu in a mobile device. It's controlled by 'setDrawerVisible' function which sets 'drawerVisible' state variable to true or false.
+          onClose={() => setDrawerVisible(false)}
+          open={drawerVisible}
+        >
+          <Menu
+            mode="inline"
+            defaultSelectedKeys={[selectedPage || "dashboard"]}
+            items={menuItems}
+            onClick={() => setDrawerVisible(false)}
+          />
+        </Drawer>
 
-          {/* Sidebar Drawer for mobile */}
-          <Drawer
-            title="Menú"
-            placement="left"
-            // This code is responsible for opening and closing the drawer menu in a mobile device. It's controlled by 'setDrawerVisible' function which sets 'drawerVisible' state variable to true or false.
-            onClose={() => setDrawerVisible(false)}
-            open={drawerVisible}
-          >
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={[selectedPage || "dashboard"]}
-              items={menuItems}
-              onClick={() => setDrawerVisible(false)}
-            />
-          </Drawer>
-
-          {/* Main Content */}
-          <Layout style={{ background: "transparent" }}>
-            <Content className="p-6 dark:text-white">
-              {account && children}
-              {!account && (
-                <div className="text-center text-lg text-gray-500">
-                  <Spin size="large" />
-                </div>
-              )}
-            </Content>
-            <Footer className="text-center bg-white dark:bg-neutral-800 dark:text-white">
-              © {new Date().getFullYear()} Asterki MiApps
-            </Footer>
-          </Layout>
+        {/* Main Content */}
+        <Layout style={{ background: "transparent" }}>
+          <div className="p-6 dark:text-white min-h-[calc(100vh-64px)]">
+            {account && children}
+            {!account && (
+              <div className="text-center text-lg text-gray-500">
+                <Spin size="large" />
+              </div>
+            )}
+          </div>
         </Layout>
       </Layout>
-
-      {/* Tour Component, Trigger only if local storage cookie is set to new user or if user request it */}
-      <Tour
-        open={!tourOpen}
-        onClose={() => {
-          setTourOpen(false);
-        }}
-        steps={steps}
-      />
     </ConfigProvider>
   );
 }

@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AdminDocumentsIndexRouteImport } from './routes/admin/documents/index'
 
 const ChatRoute = ChatRouteImport.update({
   id: '/chat',
@@ -40,6 +41,11 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminDocumentsIndexRoute = AdminDocumentsIndexRouteImport.update({
+  id: '/admin/documents/',
+  path: '/admin/documents/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/chat': typeof ChatRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/documents': typeof AdminDocumentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/documents': typeof AdminDocumentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +70,27 @@ export interface FileRoutesById {
   '/chat': typeof ChatRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin/': typeof AdminIndexRoute
+  '/admin/documents/': typeof AdminDocumentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/chat' | '/auth/login' | '/admin'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/chat'
+    | '/auth/login'
+    | '/admin'
+    | '/admin/documents'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/chat' | '/auth/login' | '/admin'
-  id: '__root__' | '/' | '/about' | '/chat' | '/auth/login' | '/admin/'
+  to: '/' | '/about' | '/chat' | '/auth/login' | '/admin' | '/admin/documents'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/chat'
+    | '/auth/login'
+    | '/admin/'
+    | '/admin/documents/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +99,7 @@ export interface RootRouteChildren {
   ChatRoute: typeof ChatRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminDocumentsIndexRoute: typeof AdminDocumentsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -116,6 +139,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/documents/': {
+      id: '/admin/documents/'
+      path: '/admin/documents'
+      fullPath: '/admin/documents'
+      preLoaderRoute: typeof AdminDocumentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -125,6 +155,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChatRoute: ChatRoute,
   AuthLoginRoute: AuthLoginRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminDocumentsIndexRoute: AdminDocumentsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

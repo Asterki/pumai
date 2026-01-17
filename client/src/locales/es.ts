@@ -81,6 +81,13 @@ const translation = {
         admin: "Administración",
       },
     },
+    admin: {
+      sidebar: {
+        title: "Panel de Administración PumAI",
+        documents: "Documentos",
+        logs: "Registros",
+      },
+    },
   },
 
   pages: {
@@ -116,6 +123,30 @@ const translation = {
         },
         submit: "Iniciar Sesión",
         back: "Regresar al Inicio",
+      },
+    },
+    admin: {
+      index: {
+        greetings: {
+          morning: "Buenos días",
+          afternoon: "Buenas tardes",
+          evening: "Buenas noches",
+        },
+        description:
+          "Bienvenido al sistema administrativo del Hospital San Benito José. Aquí puedes gestionar todos los aspectos relacionados con la administración del hospital, incluyendo pacientes, citas, personal médico y más.",
+
+        items: {
+          index: "Panel De Control",
+          title: "Panel de Control",
+          pharmacy: "Farmacia",
+          preclinic: "Preclínica",
+          consulting: "Consultorio",
+          patients: "Pacientes",
+          accounts: "Cuentas",
+          "account-roles": "Roles de Cuentas",
+          emails: "Correos Electrónicos",
+          logs: "Registros Técnicos",
+        },
       },
     },
   },
