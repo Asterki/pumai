@@ -6,7 +6,12 @@ import OllamaEmbeddingService from "./ollama/embed";
 
 class ChromaService {
   private readonly docsDir: string = path.resolve("./data/docs");
-  private client: ChromaClient = new ChromaClient({});
+  private client: ChromaClient = new ChromaClient({
+    host: process.env.CHROMA_DB_HOST || "localhost",
+    port: process.env.CHROMA_DB_PORT ? parseInt(process.env.CHROMA_DB_PORT) : 8000,
+    ssl: process.env.CHROMA_DB_SSL === "true",
+    // path: process.env.CHROMA_DB_PATH || "",
+  });
   private collection: Collection | null = null;
 
   private static instance: ChromaService | null = null;
@@ -50,7 +55,8 @@ class ChromaService {
       const text = fs.readFileSync(filePath, "utf8");
 
       // Create an embedding for the file content
-      const embedding = await OllamaEmbeddingService.getInstance().embedText(text);
+      const embedding =
+        await OllamaEmbeddingService.getInstance().embedText(text);
 
       await this.collection.add({
         ids: [file],
