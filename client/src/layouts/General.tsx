@@ -23,6 +23,7 @@ import {
   FaQuestionCircle,
   FaCircle,
   FaFolder,
+  FaUser,
 } from "react-icons/fa";
 
 import { useSelector } from "react-redux";
@@ -109,6 +110,11 @@ export default function GeneralLayout({
         key: "about",
         icon: <FaQuestionCircle />,
         label: t("sidebar.about"),
+      },
+      {
+        key: "admin",
+        icon: <FaUser />,
+        label: t("sidebar.admin"),
       },
     ],
     [t],
@@ -225,17 +231,7 @@ export default function GeneralLayout({
               className="w-9 h-9 rounded-lg flex items-center justify-center border"
               aria-hidden
             >
-              <div
-                style={{
-                  background:
-                    "linear-gradient(90deg,#00f5ff 0%,#0084ff 25%,#7b2ff7 50%,#ff00d4 75%,#00f5ff 100%)",
-                  WebkitBackgroundClip: "text",
-                  backgroundClip: "text",
-                  fontFamily: "monospace",
-                  backgroundSize: "200% 200%",
-                }}
-                className="monospace animate-gradient"
-              >
+              <div className="inline-block bg-linear-to-br bg-[linear-gradient(90deg,#00f5ff_0%,#0084ff_25%,#7b2ff7_50%,#ff00d4_75%,#00f5ff_100%)] bg-[length:300%_300%] bg-clip-text text-transparent animate-gradient font-mono">
                 AI
               </div>
             </div>

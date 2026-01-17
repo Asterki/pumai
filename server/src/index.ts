@@ -11,20 +11,16 @@ import { loadEnv } from "./config/env";
 import MongoDBClient from "./config/mongodb";
 import { registerRoutes } from "./routes";
 import { traceIdMiddleware } from "./middleware/traceId";
-// import SessionsService from "./services/sessions";
+import SessionsService from "./services/sessions";
 import ChromaService from "./services/chroma";
 
 import SocketServer from "./services/socket";
-import setup from "./config/setup";
 
 export async function startServer() {
   loadEnv();
 
   const dev = process.env.NODE_ENV !== "production";
   const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-
-  // Set up
-  setup();
 
   const app = express();
   const httpServer = createServer(app);
@@ -54,6 +50,9 @@ export async function startServer() {
 
   // Services
   await ChromaService.getInstance().getCollection();
+
+  const sessions = SessionsService.prototype.getInstance();
+  sessions.loadToServer(app);
 
   registerRoutes(app);
   new MongoDBClient(process.env.MONGODB_URI!).connect();

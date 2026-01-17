@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import logo from "../logo.svg";
 
 import { Layout, Button, Menu } from "antd";
@@ -15,6 +15,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Page() {
+  const navigate = useNavigate();
+
   return (
     <>
       <Header
@@ -26,7 +28,7 @@ function Page() {
 
       {/* HERO */}
       <div className="relative h-[70vh] flex flex-col items-center justify-center bg-[#253a69] text-white overflow-hidden">
-        <div>
+        <div className="z-20 flex flex-col items-center justify-center">
           <img src="/assets/img/puma.png" className="w-64" alt="" />
           <h1 className="text-[100px] font-bold mb-4 text-white">
             Pum
@@ -35,17 +37,22 @@ function Page() {
             </span>
           </h1>
 
-          <div className="flex items-center justify-center">
-            <Button type="primary" size="large" icon={<MessageCirclePlus />}>
+          <div className="flex items-center justify-center z-20">
+            <Button
+              type="primary"
+              size="large"
+              icon={<MessageCirclePlus />}
+              onClick={() => navigate({ to: "/chat" })}
+            >
               Iniciar
             </Button>
           </div>
         </div>
 
-        <div>
+        <div className="z-10">
           <img
             src="/assets/img/sol-cut.png"
-            className="opacity-5 grayscale invert absolute top-0 left-0 w-full h-full object-cover"
+            className="opacity-5 grayscale invert absolute z-10 top-0 left-0 w-full h-full object-cover"
             alt=""
           />
         </div>
