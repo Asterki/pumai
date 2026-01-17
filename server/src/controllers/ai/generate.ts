@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 
 import { TypedRequest } from "../../types";
-import * as AIAPITypes from "../../../../shared/types/api/ai";
+import * as AIAPITypes from "../../../../shared/api/ai";
 
 import OllamaChatService from "../../services/ollama/chat";
 import OllamaEmbeddingService from "../../services/ollama/embed";
@@ -13,20 +13,23 @@ const handler = async (
   _next: NextFunction,
 ) => {
   // TODO: Expand this
-  const { prompt } = req.parsedBody;
+  const { prompt, chat } = req.parsedBody;
 
   const context = await OllamaEmbeddingService.getInstance().getContext(prompt);
+  console.log(context)
+
   const finalPrompt = OllamaChatService.getInstance().getFinalPrompt(
     context.documents.join("\n"),
     prompt,
   );
 
-  const result: ChatResponse = await OllamaChatService.getInstance().generateChat<ChatResponse>(
-    finalPrompt,
-    [],
-    false,
-    { temperature: 0.2 },
-  );
+  const result: ChatResponse =
+    await OllamaChatService.getInstance().generateChat<ChatResponse>(
+      finalPrompt,
+      chat,
+      false,
+      { temperature: 0.2 },
+    );
 
   res.status(200).json({ status: "success", result: result.message.content });
 };

@@ -15,12 +15,16 @@ import { traceIdMiddleware } from "./middleware/traceId";
 import ChromaService from "./services/chroma";
 
 import SocketServer from "./services/socket";
+import setup from "./config/setup";
 
 export async function startServer() {
   loadEnv();
 
   const dev = process.env.NODE_ENV !== "production";
   const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+
+  // Set up
+  setup();
 
   const app = express();
   const httpServer = createServer(app);

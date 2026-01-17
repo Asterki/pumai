@@ -7,7 +7,7 @@ const router = express.Router();
 import { validateRequestBody } from "../middleware/validationMiddleware";
 
 // Schemas
-import { generateSchema } from "../../../shared/zod-schemas/ai";
+import { generateSchema } from "../../../shared/schemas/ai";
 
 // Routes
 router.post(

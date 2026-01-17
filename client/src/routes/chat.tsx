@@ -1,21 +1,42 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Input, Button, Spin, message as antdMessage } from "antd";
+import {
+  Input,
+  Button,
+  Spin,
+  message as antdMessage,
+  Modal,
+  Select,
+  Checkbox,
+} from "antd";
 import { FaPaperPlane } from "react-icons/fa";
 
 import AIFeature, { ChatMessage } from "../features/ai";
 import GeneralLayout from "../layouts/General";
+
+import { useTranslation } from "react-i18next";
+
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
 
 export const Route = createFileRoute("/chat")({
   component: Page,
 });
 
 function Page() {
+  const { t } = useTranslation(["pages"], {
+    keyPrefix: "chat",
+  });
+
+  const { preferences: userPreferences } = useSelector(
+    (state: RootState) => state.preferences,
+  );
+
   const [messages, setMessages] = React.useState<ChatMessage[]>([
     {
       source: "api",
       role: "assistant",
-      content: "Hola 👋 ¿en qué puedo ayudarte hoy?",
+      content: `Hola ${userPreferences?.name} 👋 ¿en qué puedo ayudarte hoy?`,
       timestamp: Date.now(),
     },
   ]);
@@ -112,11 +133,11 @@ function Page() {
 
   return (
     <GeneralLayout selectedPage="chat">
-      <div className="relative flex flex-col h-[90vh] rounded-xl overflow-hidden text-white">
-        {/* Chat messages */}
+      <div className="flex flex-col flex-1 min-h-0 rounded-xl overflow-hidden text-white">
+        {/* Messages */}
         <div
           ref={containerRef}
-          className="flex flex-col gap-4 p-6 md:px-40 overflow-y-auto flex-1 relative z-10 scrollbar-thin scrollbar-thumb-gray-700/50"
+          className="flex-1 min-h-0 overflow-y-auto max-h-[calc(100vh-184px)] flex flex-col gap-4 px-6 md:px-40 py-6"
         >
           {messages.map((msg, i) => (
             <AIFeature.components.MessageComponent key={i} {...msg} />
@@ -129,33 +150,41 @@ function Page() {
           )}
         </div>
 
-        {/* Input area */}
-        <div className="relative z-10 border-t border-white/10 bg-white/10 backdrop-blur-xl p-4 flex items-end gap-3">
-          <Input.TextArea
-            autoSize={{ maxRows: 6 }}
-            placeholder="Escribe tu mensaje..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onPressEnter={(e) => {
-              if (!e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-              }
-            }}
-            classNames={{
-              textarea:
-                "bg-transparent text-white placeholder:text-neutral-400 border-none focus:ring-0 resize-none",
-            }}
-          />
-          <Button
-            type="primary"
-            icon={<FaPaperPlane />}
-            loading={loading}
-            onClick={sendMessage}
-            className="!bg-blue-500 hover:!bg-blue-600 rounded-full px-5 py-2 font-medium shadow-lg"
-          >
-            Enviar
-          </Button>
+        <div className="bottom-0 h-[120px] absolute w-full shrink-0 border-t border-white/10 bg-white/10">
+          {/* Input */}
+
+          <div className="md:p-4 p-2 flex items-end md:gap-3 gap-2">
+            <Input.TextArea
+              autoSize={{ maxRows: 6 }}
+              placeholder={t("input.placeholder")}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onPressEnter={(e) => {
+                if (!e.shiftKey) {
+                  e.preventDefault();
+                  sendMessage();
+                }
+              }}
+              classNames={{
+                textarea:
+                  "bg-transparent dark:text-white placeholder:text-neutral-400 border-none focus:ring-0 resize-none",
+              }}
+            />
+            <Button
+              type="primary"
+              icon={<FaPaperPlane />}
+              loading={loading}
+              onClick={sendMessage}
+              className="rounded-full px-5 py-2 font-medium"
+            >
+              <div className="hidden sm:block">{t("input.sendButton")}</div>
+            </Button>
+          </div>
+
+          {/* Disclaimer */}
+          <p className="mb-2 text-center text-sm text-gray-400">
+            {t("disclaimer")}
+          </p>
         </div>
       </div>
     </GeneralLayout>

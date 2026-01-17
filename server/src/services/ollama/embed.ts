@@ -31,6 +31,7 @@ class OllamaEmbeddingClient {
     text: string,
     options?: EmbedRequest,
   ): Promise<number[]> {
+    console.log(process.env.OLLAMA_EMBEDDING_MODEL);
     const response = await this.client.embed({
       model: process.env.OLLAMA_EMBEDDING_MODEL || "embeddinggemma:latest",
       input: text,

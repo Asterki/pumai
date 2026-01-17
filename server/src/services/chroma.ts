@@ -5,12 +5,11 @@ import { ChromaClient, Collection } from "chromadb";
 import OllamaEmbeddingService from "./ollama/embed";
 
 class ChromaService {
-  private readonly docsDir: string = path.resolve("./data/docs");
+  private readonly docsDir: string = path.resolve("./data/rag-documents");
   private client: ChromaClient = new ChromaClient({
     host: process.env.CHROMA_DB_HOST || "localhost",
     port: process.env.CHROMA_DB_PORT ? parseInt(process.env.CHROMA_DB_PORT) : 8000,
     ssl: process.env.CHROMA_DB_SSL === "true",
-    // path: process.env.CHROMA_DB_PATH || "",
   });
   private collection: Collection | null = null;
 
@@ -23,11 +22,6 @@ class ChromaService {
 
   constructor() {
     this.loadFilesToCollection();
-
-    // Create the database in case of not existing
-    if (!fs.existsSync("./chroma-database")) {
-      fs.mkdirSync("./chroma-database");
-    }
   }
 
   public getClient() {
@@ -39,20 +33,22 @@ class ChromaService {
   }
 
   public deleteCollection() {
-    return this.client.deleteCollection({ name: "docs" });
+    return this.client.deleteCollection({ name: "rag-documents" });
   }
 
   private async loadFilesToCollection() {
+    await this.deleteCollection()
     this.collection = await this.client.getOrCreateCollection({
-      name: "docs",
+      name: "rag-documents",
       embeddingFunction: OllamaEmbeddingService.getInstance().getEmbedder(),
     });
 
     for (const file of fs.readdirSync(this.docsDir)) {
       if (!file.endsWith(".txt")) continue;
-
       const filePath = path.join(this.docsDir, file);
       const text = fs.readFileSync(filePath, "utf8");
+
+      console.log(text)
 
       // Create an embedding for the file content
       const embedding =

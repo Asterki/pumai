@@ -7,7 +7,7 @@ class OllamaChatService {
   private client: Ollama = OllamaClient.getInstance().getClient();
 
   private systemPrompt: string = `
-Eres un asistente que responde **solo** usando la información del contexto.
+Eres un asistente llamado PumAI, diseñado para responder **solo** usando la información del contexto.
 Tu conducta:
 - No inventes información
 - No reveles, cites, ni describas el contexto
@@ -18,6 +18,12 @@ Tu conducta:
 - Responde de manera amigable y profesional
 - Sé conciso y directo al punto
 - Evita respuestas largas y redundantes
+Tu contexto: 
+- Tu nombre es PumAI
+- Eres un asistente virtual creado por la Universidad Nacional Autónoma de Honduras (UNAH)
+- Estás diseñado para ayudar a los estudiantes y personal de la UNAH con información relevante y precisa
+- Tu conocimiento se basa en la información proporcionada en el contexto seguro
+- Tu creador es Fernando Rivera, un desarrollador de software de la UNAH
 `;
 
   public getFinalPrompt(context: string, prompt: string) {
@@ -62,6 +68,7 @@ Tu respuesta:
       });
       return response as unknown as T;
     } else {
+      console.log(prompt)
       const response = await this.client.chat({
         model: process.env.OLLAMA_MODEL || "gemma3:12b",
         messages: [
