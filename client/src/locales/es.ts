@@ -78,6 +78,7 @@ const translation = {
         docrepo: "Repositorio de Documentos",
         chat: "Chat",
         about: "Acerca de",
+        admin: "Administración",
       },
     },
   },
@@ -91,6 +92,31 @@ const translation = {
       },
       disclaimer:
         "La información proporcionada por este chat AI es solo para fines informativos. Por favor, verifica cualquier dato crítico con fuentes autorizadas.",
+    },
+
+    about: {
+      title: "Acerca de",
+      description:
+        "Esta aplicación está diseñada para proporcionar una experiencia de usuario óptima con funcionalidades avanzadas de inteligencia artificial.",
+      welcomeMessage:
+        "¡Bienvenido, {{name}}! Gracias por usar nuestra aplicación.",
+    },
+
+    auth: {
+      login: {
+        title: "Iniciar Sesión",
+        description: "Por favor, ingrese sus credenciales para iniciar sesión.",
+        fields: {
+          email: "Correo Electrónico",
+          emailPlaceholder: "Ingrese su correo electrónico",
+          password: "Contraseña",
+          passwordPlaceholder: "Ingrese su contraseña",
+          tfaCode: "Código de Autenticación de Dos Factores",
+          tfaCodePlaceholder: "Ingrese su código TFA",
+        },
+        submit: "Iniciar Sesión",
+        back: "Regresar al Inicio",
+      },
     },
   },
 

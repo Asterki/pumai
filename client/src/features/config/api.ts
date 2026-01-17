@@ -1,27 +1,19 @@
-import axios from 'axios'
+import axios from "axios";
 
-import ConfigFeature, { type ConfigAPITypes } from '.'
+import { type ConfigAPITypes } from ".";
 
-import { getTerminalFingerPrint } from '../../utils/terminals'
-import ApiUtils from '../../utils/api'
+import ApiUtils from "../../utils/api";
 
 const baseUrl =
-  import.meta.env.MODE === 'development'
-    ? import.meta.env.VITE_SERVER_URL + '/api/config'
-    : '/api/config'
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_SERVER_URL + "/api/config"
+    : "/api/config";
 
 // Create an Axios client with credentials enabled by default
 const axiosClient = axios.create({
   baseURL: baseUrl,
   withCredentials: true, // Always include credentials
-})
-
-// Async interceptor for fingerprint header
-axiosClient.interceptors.request.use(async (config) => {
-  const fingerprint = await getTerminalFingerPrint()
-  config.headers['x-device-fingerprint'] = fingerprint
-  return config
-})
+});
 
 const configApi = {
   get: async (): Promise<ConfigAPITypes.GetConfigResponseData> => {
@@ -29,12 +21,12 @@ const configApi = {
       const response =
         await axiosClient.get<ConfigAPITypes.GetConfigResponseData>(``, {
           withCredentials: true,
-        })
+        });
 
-      return response.data
+      return response.data;
     } catch (error: Error | unknown) {
       // Check if the result is a network error, if so, we try to fetch from cache
-      return ApiUtils.handleAxiosError(error)
+      return ApiUtils.handleAxiosError(error);
     }
   },
   update: async (
@@ -48,13 +40,13 @@ const configApi = {
           {
             withCredentials: true,
           },
-        )
+        );
 
-      return response.data
+      return response.data;
     } catch (error: Error | unknown) {
-      return ApiUtils.handleAxiosError(error)
+      return ApiUtils.handleAxiosError(error);
     }
   },
-}
+};
 
-export default configApi
+export default configApi;

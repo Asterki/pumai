@@ -33,6 +33,7 @@ class ChromaService {
   }
 
   private async loadFilesToCollection() {
+    await this.deleteCollection();
     this.collection = await this.client.getOrCreateCollection({
       name: "rag-documents",
       embeddingFunction: OllamaEmbeddingService.getInstance().getEmbedder(),

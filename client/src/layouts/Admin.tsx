@@ -55,6 +55,9 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
 
   const { account } = useSelector((state: RootState) => state.auth);
   const { config } = useSelector((state: RootState) => state.config);
+  const { preferences: userPreferences } = useSelector(
+    (state: RootState) => state.preferences,
+  );
 
   const [collapsed, setCollapsed] = useState(false);
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -132,58 +135,81 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
   const menuItems: Array<MenuItemType> = [
     // === Overview & Core ===
     {
-      key: "dashboard",
-      label: <Link to="/dashboard">{t("sidebar.index")}</Link>,
-      icon: <FaTachometerAlt />, // Better for dashboards
-    },
-    {
-      key: "nodes",
-      label: <Link to="/dashboard/nodes">{t("sidebar.nodes")}</Link>,
-      icon: <FaCubes />, // Better for dashboards
-    },
-    {
-      key: "conflicts",
-      label: <Link to="/">{t("sidebar.conflicts")}</Link>,
-      icon: <FaProjectDiagram />, // Better for dashboards
-    },
-    {
-      key: "events",
-      label: <Link to="/">{t("sidebar.events")}</Link>,
-      icon: <FaInbox />, // Better for dashboards
-    },
-    {
-      key: "accounts",
-      label: <Link to="/">{t("sidebar.accounts")}</Link>,
-      icon: <FaUsers />,
-      style: {
-        display: hasPermission("accounts:read") ? "block" : "none",
-      },
-    },
-    {
-      key: "roles",
-      label: <Link to="/">{t("sidebar.roles")}</Link>,
-      icon: <FaUserShield />,
-      style: {
-        display: hasPermission("account-roles:read") ? "block" : "none",
-      },
-    },
-    {
       key: "logs",
       label: <Link to="/">{t("sidebar.logs")}</Link>,
       icon: <FaTerminal />, // Better for dashboards
     },
   ];
 
-  const isDark = account?.preferences.general.theme === "dark";
+  const darkTheme = {
+    algorithm: theme.darkAlgorithm,
+    token: {
+      // Primary
+      colorPrimary: "#1e3976",
+
+      // Backgrounds
+      colorBgBase: "#0f1115", // app background (almost black)
+      colorBgLayout: "#0f1115",
+      colorBgContainer: "#16181d", // cards, sider, header
+      colorBgElevated: "#1d2026", // dropdowns, modals, popovers
+      colorBgSpotlight: "#262a33", // highlights, selected items
+
+      // Text
+      colorTextBase: "#e6e9f0",
+      colorTextSecondary: "#b8c1d9",
+
+      // Borders
+      colorBorder: "#262a33",
+      colorSplit: "#262a33",
+
+      // Status
+      colorSuccess: "#366533",
+      colorWarning: "#f0b92d",
+      colorError: "#8a1518",
+      colorInfo: "#5facc5",
+
+      // UI
+      borderRadius: 8,
+      fontSize: 15,
+    },
+  };
+
+  const lightTheme = {
+    algorithm: theme.defaultAlgorithm,
+    token: {
+      // Primary
+      colorPrimary: "#1e3976",
+
+      // Backgrounds
+      colorBgBase: "#ffffff",
+      colorBgContainer: "#ffffff",
+      colorBgLayout: "#f5f7fb",
+
+      // Text
+      colorTextBase: "#1f2937",
+      colorTextSecondary: "#4b5563",
+
+      // Borders
+      colorBorder: "#e5e7eb",
+
+      // Status
+      colorSuccess: "#366533",
+      colorWarning: "#f0b92d",
+      colorError: "#8a1518",
+      colorInfo: "#5facc5",
+
+      // UI
+      borderRadius: 8,
+      fontSize: 15,
+    },
+  };
 
   return (
     <ConfigProvider
       locale={esES}
-      theme={{
-        algorithm: isDark ? theme.darkAlgorithm : undefined,
-      }}
+      theme={userPreferences?.theme === "dark" ? darkTheme : lightTheme}
     >
-      <Layout className={`${isDark ? "dark" : ""} min-h-screen`}>
+      <Layout className={`min-h-screen`}>
         {/* Top Navbar */}
         <Header
           className="px-4 flex items-center justify-between bg-white dark:bg-neutral-800"
@@ -208,7 +234,6 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
             className="hidden md:block"
-            theme={isDark ? "dark" : "light"}
             width={220}
             ref={sidebarRef}
           >
