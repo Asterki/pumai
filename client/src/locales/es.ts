@@ -257,6 +257,16 @@ const translation = {
             description:
               "Administra y organiza todos los documentos que la IA puede utilizar para responder a las consultas de los usuarios.",
           },
+          accounts: {
+            title: "Gestión de Cuentas",
+            description:
+              "Administra las cuentas de usuario dentro del sistema.",
+          },
+          "account-roles": {
+            title: "Gestión de Roles de Cuenta",
+            description:
+              "Administra los roles y permisos de las cuentas de usuario.",
+          },
         },
       },
       accounts: {

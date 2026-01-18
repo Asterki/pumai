@@ -232,7 +232,7 @@ function RouteComponent() {
       </Modal>
 
       <div className="mb-2">
-        {tPage("dashboard:common.loggedInAs", {
+        {tCommon("loggedInAs", {
           name: account?.profile.name,
           email: account?.email.value,
         })}

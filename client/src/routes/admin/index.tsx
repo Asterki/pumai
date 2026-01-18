@@ -38,7 +38,7 @@ function RouteComponent() {
   const dispatch = useDispatch<typeof import("../../store").store.dispatch>();
   const { account } = useSelector((state: RootState) => state.auth);
 
-  const { tPage: tpage } = useTranslation(["pages"], {
+  const { t: tpage } = useTranslation(["pages"], {
     keyPrefix: "admin.index",
   });
 
@@ -67,20 +67,34 @@ function RouteComponent() {
 
   const menuItems: Array<{
     key: string;
-    label: React.ReactNode;
+    link: string;
+    label: string;
     description?: string;
     icon: React.ReactNode;
   }> = [
     // === Overview & Core ===
     {
-      key: "pharmacy",
-      label: (
-        <Link to="/admin/documents" className="text-2xl font-bold">
-          {tpage("items.documents.title")}
-        </Link>
-      ),
+      key: "documents",
+      link: "/admin/documents",
+      label: tpage("items.documents.title"),
       description: tpage("items.documents.description"),
       icon: <FaFile className="text-6xl" />, // Better for dashboards
+    },
+
+    {
+      key: "accounts",
+      link: "/admin/accounts",
+      label: tpage("items.accounts.title"),
+      description: tpage("items.accounts.description"),
+      icon: <FaUser className="text-6xl" />, // Better for dashboards
+    },
+
+    {
+      key: "account-roles",
+      link: "/admin/accounts/roles",
+      label: tpage("items.account-roles.title"),
+      description: tpage("items.account-roles.description"),
+      icon: <FaUserShield className="text-6xl" />, // Better for dashboards
     },
   ];
 
@@ -99,24 +113,29 @@ function RouteComponent() {
         </Title>
         <Paragraph>{tpage("description")}</Paragraph>
 
-        <div className="flex gap-2 flex-wrap mt-8 items-center justify-center">
+        <div className="flex gap-2 flex-wrap mt-8 items-stretch justify-center">
           {menuItems.map((item) => (
-            <Card key={item.key} hoverable className="w-1/4">
-              <Link
-                to={item.key === "dashboard" ? "/dashboard" : `/${item.key}`}
-              >
-                <div className="flex items-center gap-4">
-                  <Col>{item.icon}</Col>
-                  <Col>
-                    <Text>{item.label}</Text>
-                    {item.description && (
-                      <Paragraph type="secondary" style={{ margin: 0 }}>
-                        {item.description}
-                      </Paragraph>
-                    )}
-                  </Col>
-                </div>
-              </Link>
+            <Card
+              hoverable
+              className="w-1/4"
+              key={item.key}
+              onClick={() => {
+                navigate({ to: item.link as any });
+              }}
+            >
+              <div className="flex items-center flex-1 justify-center gap-4 h-full">
+                <Col className="text-blue-500">{item.icon}</Col>
+                <Col>
+                  <p className="text-2xl font-bold text-blue-500">
+                    {item.label}
+                  </p>
+                  {item.description && (
+                    <Paragraph type="secondary" style={{ margin: 0 }}>
+                      {item.description}
+                    </Paragraph>
+                  )}
+                </Col>
+              </div>
             </Card>
           ))}
         </div>

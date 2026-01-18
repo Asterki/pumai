@@ -136,7 +136,7 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
 
     {
       key: "logs",
-      label: <Link to="/">{t("sidebar.logs")}</Link>,
+      label: <Link to="/admin/logs">{t("sidebar.logs")}</Link>,
       icon: <FaTerminal />, // Better for dashboards
     },
   ];

@@ -33,10 +33,10 @@ function RouteComponent() {
   const { t: tCommon } = useTranslation(["common"]);
 
   const { accounts, fetchAccounts, accountsListState } =
-    AccountsFeature.hooks.useAccountsList({ t, message });
+    AccountsFeature.hooks.useAccountsList({ message });
 
   const { accountRoles, fetchAccountRoles } =
-    AccountRolesFeature.hooks.useAccountRolesList({ t, message });
+    AccountRolesFeature.hooks.useAccountRolesList({});
 
   // # region Create Account
 
