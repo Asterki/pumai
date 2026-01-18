@@ -39,60 +39,16 @@ function RouteComponent() {
     AccountRolesFeature.hooks.useAccountRolesList({ t: tPage, message });
 
   // # region Create Account
+
   const {
-    onValuesChange: onCreateAccountValuesChange,
-    form: createAccountForm,
-    validate: validateCreateAccountForm,
-    defaultValues: defaultCreateAccountFields,
-  } = AccountsFeature.hooks.useCreateAccountFormValidation(tPage);
-
-  const [createAccountModalState, setCreateAccountModalState] = useState({
-    isOpen: false,
-    loading: false,
+    setState: setCreateModalState,
+    state: createModalState,
+    openModal: openCreateAccountModal,
+    closeModal: closeCreateAccountModal,
+    createAccount: handleCreateAccount,
+  } = AccountsFeature.hooks.useCreateModal({
+    onSuccess: () => fetchAccounts({}),
   });
-
-  const resetCreateAccountModalState = () => {
-    setCreateAccountModalState({ isOpen: false, loading: false });
-    createAccountForm.resetFields();
-  };
-
-  const handleCreateAccount = async () => {
-    if (createAccountModalState.loading) return;
-
-    // Use hook’s validate method — sets form errors internally
-    const values = createAccountForm.getFieldsValue(true);
-    if (!validateCreateAccountForm(values)) {
-      return;
-    }
-
-    setCreateAccountModalState((prev) => ({ ...prev, loading: true }));
-    const result = await AccountsFeature.api.create(values);
-
-    if (result.status === "success") {
-      message.success(
-        tPage("dashboard:accounts.modals.create.messages.success"),
-      );
-
-      createAccountForm.resetFields();
-      setCreateAccountModalState({ isOpen: false, loading: false });
-
-      await fetchAccounts({});
-    } else if (result.status === "email-in-use") {
-      message.warning(
-        tPage("dashboard:accounts.modals.create.messages.email-in-use"),
-      );
-    } else if (result.status === "role-cannot-be-assigned") {
-      message.warning(
-        tPage(
-          "dashboard:accounts.modals.create.messages.role-cannot-be-assigned",
-        ),
-      );
-    } else {
-      message.error(tPage(`error-messages:${result.status}`));
-    }
-    setCreateAccountModalState((prev) => ({ ...prev, loading: false }));
-  };
-  // # endregion Create Account
 
   // Delete
   type DeleteAccountModalState = AccountAPITypes.DeleteRequestBody & {
@@ -201,7 +157,7 @@ function RouteComponent() {
       !account.data.role.permissions.includes("*")
     ) {
       message.error(tPage("error-messages:forbidden"));
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/admin" });
       return;
     } else {
       (async () => {
@@ -213,31 +169,13 @@ function RouteComponent() {
 
   return (
     <AdminPageLayout selectedPage="accounts">
-      <Modal
-        title={tPage("dashboard:accounts.modals.create.title")}
-        open={createAccountModalState.isOpen}
-        onCancel={resetCreateAccountModalState}
-        cancelText={tPage("common.cancel")}
-        onOk={handleCreateAccount}
-        okButtonProps={{
-          loading: createAccountModalState.loading,
-          icon: <FaPlus />,
-          disabled: createAccountModalState.loading,
-        }}
-        okText={tPage("dashboard:accounts.modals.create.title")}
-      >
-        {account && (
-          <AccountsFeature.components.CreateAccountForm
-            form={createAccountForm}
-            defaultValues={defaultCreateAccountFields}
-            t={tPage}
-            roles={accountRoles.accountRoles.filter((role) => {
-              return role.level > (account.data.role as IAccountRole).level;
-            })}
-            onValuesChange={onCreateAccountValuesChange}
-          />
-        )}
-      </Modal>
+      <AccountsFeature.components.CreateAccountModal
+        state={createModalState}
+        setState={setCreateModalState}
+        roles={accountRoles.accountRoles}
+        onClose={closeCreateAccountModal}
+        onCreate={handleCreateAccount}
+      />
 
       {/* This window manages the account deletion */}
       <Modal
@@ -296,9 +234,7 @@ function RouteComponent() {
           variant="solid"
           type="primary"
           className="bg-blue-500 text-white px-4 py-2 rounded-md"
-          onClick={() =>
-            setCreateAccountModalState((s) => ({ ...s, isOpen: true }))
-          }
+          onClick={openCreateAccountModal}
           icon={<FaPlus />}
           disabled={
             !account ||

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Request, Response, NextFunction } from "express";
 
-import * as AccountRolesAPITypes from "../../../../shared/types/api/account-roles";
+import * as AccountRolesAPITypes from "../../../../shared/api/account-roles";
 import { IAccount } from "../../../../shared/models/account";
 
 import LoggingService from "../../services/logging";

@@ -17,11 +17,11 @@ const router = express.Router();
 
 // Import the schemas and types
 import {
-  createAccountSchema,
-  deleteAccountSchema,
-  getAccountsSchema,
-  updateAccountSchema,
-  listAccountsSchema,
+  createSchema,
+  deleteSchema,
+  getSchema,
+  updateSchema,
+  listSchema,
 } from "../../../shared/schemas/accounts";
 
 // Apply global middlewares
@@ -31,33 +31,33 @@ router.use(ensureAuthenticated);
 router.post(
   "/create",
   ensurePermissions(["accounts:create"]),
-  validateRequestBody(createAccountSchema),
+  validateRequestBody(createSchema),
   createHandler,
 );
 
 router.post(
   "/update",
   ensurePermissions(["accounts:update"]),
-  validateRequestBody(updateAccountSchema),
+  validateRequestBody(updateSchema),
   updateHandler,
 );
 
 router.post(
   "/delete",
   ensurePermissions(["accounts:delete"]),
-  validateRequestBody(deleteAccountSchema),
+  validateRequestBody(deleteSchema),
   deleteHandler,
 );
 
 router.post(
   "/restore",
   ensurePermissions(["accounts:restore"]),
-  validateRequestBody(deleteAccountSchema),
+  validateRequestBody(deleteSchema),
   restoreHandler,
 );
 
-router.post("/get", validateRequestBody(getAccountsSchema), getHandler);
+router.post("/get", validateRequestBody(getSchema), getHandler);
 
-router.post("/list", validateRequestBody(listAccountsSchema), listHandler);
+router.post("/list", validateRequestBody(listSchema), listHandler);
 
 export default router;

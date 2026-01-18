@@ -45,7 +45,6 @@ export function AccountsTable({
   const { t: tComponent } = useTranslation(["features"], {
     keyPrefix: "accounts.components.table",
   });
-  const { t: tCommon } = useTranslation(["common"]);
 
   return (
     <div className="mt-4">
@@ -157,9 +156,7 @@ export function AccountsTable({
                 <Space>
                   <Dropdown menu={{ items: menuItems }} trigger={["click"]}>
                     <Button icon={<FaEllipsisH />}>
-                      {tComponent(
-                        "dashboard:categories.table.actionButtons.trigger",
-                      )}
+                      {tComponent("actionButtons.trigger")}
                     </Button>
                   </Dropdown>
                 </Space>

@@ -82,6 +82,31 @@ const translation = {
           role: "Rol",
           deleted: "Eliminado",
           actions: "Acciones",
+
+          total: "Mostrando {{range}} de {{total}} cuentas",
+
+          actionButtons: {
+            trigger: "Acciones",
+            update: "Actualizar",
+            changePassword: "Cambiar Contraseña",
+            delete: "Eliminar",
+            restore: "Restaurar",
+            updateStatus: "Actualizar Estado",
+          },
+        },
+
+        createModal: {
+          title: "Crear Nueva Cuenta",
+          fields: {
+            name: "Nombre",
+            namePlaceholder: "Ingrese el nombre completo",
+            email: "Correo Electrónico",
+            emailPlaceholder: "Ingrese la dirección de correo electrónico",
+            password: "Contraseña",
+            passwordPlaceholder: "Ingrese una contraseña segura",
+            role: "Rol",
+            selectRole: "Seleccione un rol",
+          },
         },
       },
     },
