@@ -16,6 +16,7 @@ import {
   FaTerminal,
   FaUser,
   FaUserShield,
+  FaFile,
 } from "react-icons/fa";
 
 import type { RootState } from "../../store";
@@ -36,6 +37,7 @@ function RouteComponent() {
   const navigate = useNavigate();
   const dispatch = useDispatch<typeof import("../../store").store.dispatch>();
   const { account } = useSelector((state: RootState) => state.auth);
+
   const { t } = useTranslation(["pages"], { keyPrefix: "admin.index" });
 
   useEffect(() => {
@@ -61,71 +63,22 @@ function RouteComponent() {
     return false;
   };
 
-  const menuItems: Array<MenuItemType> = [
+  const menuItems: Array<{
+    key: string;
+    label: React.ReactNode;
+    description?: string;
+    icon: React.ReactNode;
+  }> = [
     // === Overview & Core ===
     {
       key: "pharmacy",
       label: (
-        <Link to="/pharmacy" className="text-2xl font-bold">
-          {t("items.pharmacy")}
+        <Link to="/admin/documents" className="text-2xl font-bold">
+          {t("items.documents.title")}
         </Link>
       ),
-      icon: <FaPills className="text-6xl" />, // Better for dashboards
-    },
-    {
-      key: "preclinic",
-      label: (
-        <Link to="/pharmacy" className="text-2xl font-bold">
-          {t("items.preclinic")}
-        </Link>
-      ),
-      icon: <FaHospitalSymbol className="text-6xl" />, // Better for dashboards
-    },
-
-    {
-      key: "consulting",
-      label: (
-        <Link to="/pharmacy" className="text-2xl font-bold">
-          {t("items.consulting")}
-        </Link>
-      ),
-      icon: <TiCalendar className="text-6xl" />, // Better for dashboards
-    },
-    {
-      key: "patients",
-      label: (
-        <Link to="/pharmacy" className="text-2xl font-bold">
-          {t("items.patients")}
-        </Link>
-      ),
-      icon: <FaUsers className="text-6xl" />,
-    },
-    {
-      key: "accounts",
-      label: (
-        <Link to="/dashboard/accounts" className="text-2xl font-bold">
-          {t("items.accounts")}
-        </Link>
-      ),
-      icon: <FaUser className="text-6xl" />,
-    },
-    {
-      key: "account-roles",
-      label: (
-        <Link to="/dashboard/accounts/roles" className="text-2xl font-bold">
-          {t("items.account-roles")}
-        </Link>
-      ),
-      icon: <FaUserShield className="text-6xl" />,
-    },
-    {
-      key: "logs",
-      label: (
-        <Link to="/" className="text-2xl font-bold">
-          {t("items.logs")}
-        </Link>
-      ),
-      icon: <FaTerminal className="text-6xl" />, // Better for dashboards
+      description: t("items.documents.description"),
+      icon: <FaFile className="text-6xl" />, // Better for dashboards
     },
   ];
 
@@ -150,12 +103,17 @@ function RouteComponent() {
               <Link
                 to={item.key === "dashboard" ? "/dashboard" : `/${item.key}`}
               >
-                <Row align="middle" gutter={16}>
+                <div className="flex items-center gap-4">
                   <Col>{item.icon}</Col>
                   <Col>
                     <Text>{item.label}</Text>
+                    {item.description && (
+                      <Paragraph type="secondary" style={{ margin: 0 }}>
+                        {item.description}
+                      </Paragraph>
+                    )}
                   </Col>
-                </Row>
+                </div>
               </Link>
             </Card>
           ))}

@@ -21,6 +21,11 @@ const translation = {
       "La consulta proporcionada es demasiado larga. Por favor, reduzca la longitud de la consulta.",
   },
 
+  common: {
+    loggedInAs: "Conectado como {{name}} ({{email}})",
+    search: "Buscar",
+  },
+
   features: {
     preferences: {
       components: {
@@ -69,6 +74,17 @@ const translation = {
         },
       },
     },
+    accounts: {
+      components: {
+        table: {
+          name: "Nombre",
+          email: "Correo Electrónico",
+          role: "Rol",
+          deleted: "Eliminado",
+          actions: "Acciones",
+        },
+      },
+    },
   },
 
   layouts: {
@@ -85,7 +101,11 @@ const translation = {
       sidebar: {
         title: "Panel de Administración PumAI",
         documents: "Documentos",
-        logs: "Registros",
+        dashboard: "Panel de Control",
+        chat: "Chat AI",
+        accounts: "Cuentas",
+        "account-roles": "Roles de Cuenta",
+        logs: "Registros Técnicos",
       },
     },
   },
@@ -132,35 +152,28 @@ const translation = {
           afternoon: "Buenas tardes",
           evening: "Buenas noches",
         },
-        description:
-          "Bienvenido al sistema administrativo del Hospital San Benito José. Aquí puedes gestionar todos los aspectos relacionados con la administración del hospital, incluyendo pacientes, citas, personal médico y más.",
+        description: "Bienvenido al sistema administrativo de PumAI.",
 
         items: {
           index: "Panel De Control",
           title: "Panel de Control",
-          pharmacy: "Farmacia",
-          preclinic: "Preclínica",
-          consulting: "Consultorio",
-          patients: "Pacientes",
-          accounts: "Cuentas",
-          "account-roles": "Roles de Cuentas",
-          emails: "Correos Electrónicos",
-          logs: "Registros Técnicos",
+
+          documents: {
+            title: "Gestión de Documentos",
+            description:
+              "Administra y organiza todos los documentos que la IA puede utilizar para responder a las consultas de los usuarios.",
+          },
         },
       },
-    },
-  },
-
-  dashboard: {
-    componentes: {
-      navbar: {},
-    },
-
-    sidebar: {
-      title: "Dashboard",
-      chat: "Chat",
-      preferences: "Preferencias",
-      about: "Acerca de",
+      accounts: {
+        index: {
+          title: "Gestión de Cuentas",
+          description: "Administra las cuentas de usuario dentro del sistema.",
+          createAccount: "Crear Nueva Cuenta",
+          searchPlaceholder: "Buscar por nombre o correo electrónico",
+          showDeleted: "Mostrar Cuentas Eliminadas",
+        },
+      },
     },
   },
 };

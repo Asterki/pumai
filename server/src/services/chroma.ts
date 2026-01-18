@@ -48,8 +48,6 @@ class ChromaService {
       const filePath = path.join(this.docsDir, file);
       const text = fs.readFileSync(filePath, "utf8");
 
-      console.log(text)
-
       // Create an embedding for the file content
       const embedding =
         await OllamaEmbeddingService.getInstance().embedText(text);

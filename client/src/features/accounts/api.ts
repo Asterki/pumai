@@ -1,26 +1,17 @@
-import axios from 'axios'
-import * as AccountsAPITypes from '../../../../shared/api/accounts'
-import ApiUtils from '../../utils/api'
-
-import { getTerminalFingerPrint } from '../../utils/terminals'
+import axios from "axios";
+import * as AccountsAPITypes from "../../../../shared/api/accounts";
+import ApiUtils from "../../utils/api";
 
 const baseUrl =
-  import.meta.env.MODE === 'development'
-    ? import.meta.env.VITE_SERVER_URL + '/api/accounts'
-    : '/api/accounts'
+  import.meta.env.MODE === "development"
+    ? import.meta.env.VITE_SERVER_URL + "/api/accounts"
+    : "/api/accounts";
 
 // Create an Axios client with credentials enabled by default
 const axiosClient = axios.create({
   baseURL: baseUrl,
   withCredentials: true, // Always include credentials
-})
-
-// Async interceptor for fingerprint header
-axiosClient.interceptors.request.use(async (config) => {
-  const fingerprint = await getTerminalFingerPrint()
-  config.headers['x-device-fingerprint'] = fingerprint
-  return config
-})
+});
 
 export const categoriesApi = {
   async create(
@@ -29,12 +20,12 @@ export const categoriesApi = {
     try {
       const response =
         await axiosClient.post<AccountsAPITypes.CreateResponseData>(
-          '/create',
+          "/create",
           data,
-        )
-      return response.data
+        );
+      return response.data;
     } catch (error) {
-      return ApiUtils.handleAxiosError(error)
+      return ApiUtils.handleAxiosError(error);
     }
   },
 
@@ -43,12 +34,12 @@ export const categoriesApi = {
   ): Promise<AccountsAPITypes.GetResponseData> {
     try {
       const response = await axiosClient.post<AccountsAPITypes.GetResponseData>(
-        '/get',
+        "/get",
         data,
-      )
-      return response.data
+      );
+      return response.data;
     } catch (error) {
-      return ApiUtils.handleAxiosError(error)
+      return ApiUtils.handleAxiosError(error);
     }
   },
 
@@ -58,12 +49,12 @@ export const categoriesApi = {
     try {
       const response =
         await axiosClient.post<AccountsAPITypes.UpdateResponseData>(
-          '/update',
+          "/update",
           data,
-        )
-      return response.data
+        );
+      return response.data;
     } catch (error) {
-      return ApiUtils.handleAxiosError(error)
+      return ApiUtils.handleAxiosError(error);
     }
   },
 
@@ -73,12 +64,12 @@ export const categoriesApi = {
     try {
       const response =
         await axiosClient.post<AccountsAPITypes.DeleteResponseData>(
-          '/delete',
+          "/delete",
           data,
-        )
-      return response.data
+        );
+      return response.data;
     } catch (error) {
-      return ApiUtils.handleAxiosError(error)
+      return ApiUtils.handleAxiosError(error);
     }
   },
 
@@ -88,12 +79,12 @@ export const categoriesApi = {
     try {
       const response =
         await axiosClient.post<AccountsAPITypes.RestoreResponseData>(
-          '/restore',
+          "/restore",
           data,
-        )
-      return response.data
+        );
+      return response.data;
     } catch (error) {
-      return ApiUtils.handleAxiosError(error)
+      return ApiUtils.handleAxiosError(error);
     }
   },
 
@@ -102,12 +93,15 @@ export const categoriesApi = {
   ): Promise<AccountsAPITypes.ListResponseData> {
     try {
       const response =
-        await axiosClient.post<AccountsAPITypes.ListResponseData>('/list', data)
-      return response.data
+        await axiosClient.post<AccountsAPITypes.ListResponseData>(
+          "/list",
+          data,
+        );
+      return response.data;
     } catch (error) {
-      return ApiUtils.handleAxiosError(error)
+      return ApiUtils.handleAxiosError(error);
     }
   },
-}
+};
 
-export default categoriesApi
+export default categoriesApi;
