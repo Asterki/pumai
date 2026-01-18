@@ -6,13 +6,14 @@ import { IAccountRole } from "../../../../shared/models/account-role";
 
 // Hooks
 import { useAccountRolesList } from "./hooks/useAccountRolesList";
-import { useCreateAccountRoleFormValidation } from "./hooks/useCreateAccountRoleFormValidation";
+import { useCreateAccountRoleModal } from "./hooks/useCreateAccountRoleModal";
+import { useDeleteAccountRoleModal } from "./hooks/useDeleteAccountRoleModal";
 import { useUpdateAccountRoleFormValidation } from "./hooks/useUpdateAccountRoleFormValidation";
 
 // Components
 import { AccountRolesTable } from "./components/AccountRolesTable";
-import { CreateAccountRoleForm } from "./components/CreateAccountRoleForm";
 import { UpdateAccountRoleForm } from "./components/UpdateAccountRoleForm";
+import { CreateAccountRoleModal } from "./components/CreateAccountRoleModal";
 
 export type { IAccountRole, RolesAPITypes };
 export default {
@@ -20,12 +21,13 @@ export default {
   schemas,
   hooks: {
     useAccountRolesList,
-    useCreateAccountRoleFormValidation,
     useUpdateAccountRoleFormValidation,
+    useCreateAccountRoleModal,
+    useDeleteAccountRoleModal,
   },
   components: {
     AccountRolesTable,
-    CreateAccountRoleForm,
     UpdateAccountRoleForm,
+    CreateAccountRoleModal,
   },
 };

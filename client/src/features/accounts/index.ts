@@ -20,7 +20,6 @@ type ListAccount = {
 // Hooks
 import { useAccountsList } from "./hooks/useAccountsList";
 import { useAccountSearch } from "./hooks/useAccountSearch";
-import { useCreateAccountFormValidation } from "./hooks/useCreateAccountForm";
 import { useCreateModal } from "./hooks/useCreateModal";
 import { useUpdateAccountFormValidation } from "./hooks/useUpdateAccountFormValidation";
 
@@ -34,7 +33,6 @@ export default {
   api,
   schemas,
   hooks: {
-    useCreateAccountFormValidation,
     useAccountsList,
     useUpdateAccountFormValidation,
     useAccountSearch,

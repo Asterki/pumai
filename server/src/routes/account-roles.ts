@@ -17,12 +17,12 @@ import {
 
 // Schemas
 import {
-  getAccountRolesSchema,
-  createAccountRoleSchema,
-  deleteAccountRoleSchema,
-  listAccountRolesSchema,
-  updateAccountRoleSchema,
-  restoreAccountRoleSchema,
+  getSchema,
+  createSchema,
+  deleteSchema,
+  listSchema,
+  updateSchema,
+  restoreSchema,
 } from "../../../shared/schemas/account-roles";
 
 const router = express.Router();
@@ -34,7 +34,7 @@ router.use(ensureAuthenticated);
 router.post(
   "/create",
   ensurePermissions(["account-roles:create"]),
-  validateRequestBody(createAccountRoleSchema),
+  validateRequestBody(createSchema),
   createHandler,
 );
 
@@ -42,7 +42,7 @@ router.post(
 router.post(
   "/update",
   ensurePermissions(["account-roles:update"]),
-  validateRequestBody(updateAccountRoleSchema),
+  validateRequestBody(updateSchema),
   updateHandler,
 );
 
@@ -50,7 +50,7 @@ router.post(
 router.post(
   "/delete",
   ensurePermissions(["account-roles:delete"]),
-  validateRequestBody(deleteAccountRoleSchema),
+  validateRequestBody(deleteSchema),
   deleteHandler,
 );
 
@@ -58,14 +58,14 @@ router.post(
 router.post(
   "/restore",
   ensurePermissions(["account-roles:restore"]),
-  validateRequestBody(restoreAccountRoleSchema),
+  validateRequestBody(restoreSchema),
   restoreHandler,
 );
 
 // Get role(s)
-router.post("/get", validateRequestBody(getAccountRolesSchema), getHandler);
+router.post("/get", validateRequestBody(getSchema), getHandler);
 
 // List roles
-router.post("/list", validateRequestBody(listAccountRolesSchema), listHandler);
+router.post("/list", validateRequestBody(listSchema), listHandler);
 
 export default router;

@@ -38,7 +38,9 @@ function RouteComponent() {
   const dispatch = useDispatch<typeof import("../../store").store.dispatch>();
   const { account } = useSelector((state: RootState) => state.auth);
 
-  const { t } = useTranslation(["pages"], { keyPrefix: "admin.index" });
+  const { tPage: tpage } = useTranslation(["pages"], {
+    keyPrefix: "admin.index",
+  });
 
   useEffect(() => {
     if (!account) {
@@ -74,20 +76,20 @@ function RouteComponent() {
       key: "pharmacy",
       label: (
         <Link to="/admin/documents" className="text-2xl font-bold">
-          {t("items.documents.title")}
+          {tpage("items.documents.title")}
         </Link>
       ),
-      description: t("items.documents.description"),
+      description: tpage("items.documents.description"),
       icon: <FaFile className="text-6xl" />, // Better for dashboards
     },
   ];
 
   const greeting =
     new Date().getHours() < 12
-      ? t("greetings.morning")
+      ? tpage("greetings.morning")
       : new Date().getHours() < 18
-        ? t("index.greetings.afternoon")
-        : t("greetings.evening");
+        ? tpage("index.greetings.afternoon")
+        : tpage("greetings.evening");
 
   return (
     <AdminLayout>
@@ -95,7 +97,7 @@ function RouteComponent() {
         <Title level={2} style={{ marginBottom: 24 }}>
           {greeting}, {account?.profile.name}
         </Title>
-        <Paragraph>{t("description")}</Paragraph>
+        <Paragraph>{tpage("description")}</Paragraph>
 
         <div className="flex gap-2 flex-wrap mt-8 items-center justify-center">
           {menuItems.map((item) => (

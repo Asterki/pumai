@@ -2,41 +2,39 @@ import { useTranslation } from "react-i18next";
 import { App } from "antd";
 import { useState, useCallback } from "react";
 
-import AccountsFeature, { IAccount, AccountAPITypes } from "../";
+import AccountRolesFeature, { IAccountRole, RolesAPITypes } from "../";
 
-export type CreateAccountModalState = AccountAPITypes.CreateRequestBody & {
+export type CreateAccountRoleModalState = RolesAPITypes.CreateRequestBody & {
   isOpen: boolean;
   loading: boolean;
 };
 
-export function useCreateModal({
+export function useCreateAccountRoleModal({
   onSuccess,
 }: {
-  onSuccess: (account: IAccount) => void;
+  onSuccess: (account: IAccountRole) => void;
 }) {
   const { t } = useTranslation(["features"], {
-    keyPrefix: "accounts.hooks.useCreateModal",
+    keyPrefix: "account-roles.hooks.useCreateModal",
   });
   const { t: tErrorMessages } = useTranslation(["error-messages"]);
   const { message } = App.useApp();
 
-  const defaultState: CreateAccountModalState = {
+  const defaultState: CreateAccountRoleModalState = {
     isOpen: false,
     loading: false,
     name: "",
-    email: "",
-    password: "",
-    roleId: "",
-    locale: "es",
-    notify: false,
+    level: 0,
+    description: "",
   };
 
-  const [state, setState] = useState<CreateAccountModalState>(defaultState);
+  const [state, setState] = useState<CreateAccountRoleModalState>(defaultState);
 
   const createAccount = useCallback(async () => {
     if (state.loading) return;
 
-    const parsedData = AccountsFeature.schemas.createSchema.safeParse(state);
+    const parsedData =
+      AccountRolesFeature.schemas.createSchema.safeParse(state);
     if (!parsedData.success) {
       for (const issue of parsedData.error.issues) {
         message.warning(t(`messages.${issue.message}`));
@@ -48,13 +46,13 @@ export function useCreateModal({
       ...prev,
       loading: true,
     }));
-    const result = await AccountsFeature.api.create(parsedData.data);
-    if (result.status == "success" && result.account !== undefined) {
+    const result = await AccountRolesFeature.api.create(parsedData.data);
+    if (result.status == "success" && result.accountRole !== undefined) {
       message.success(t("messages.success"));
       setState(defaultState);
 
       // Then we add the variant to the list
-      if (onSuccess) onSuccess(result.account);
+      if (onSuccess) onSuccess(result.accountRole);
     } else {
       setState((prev) => ({
         ...prev,

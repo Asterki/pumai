@@ -28,15 +28,15 @@ function RouteComponent() {
 
   // Translations
   const { t: tPage } = useTranslation(["pages"], {
-    keyPrefix: "admin.accounts.index",
+    keyPrefix: "admin.accounts",
   });
   const { t: tCommon } = useTranslation(["common"]);
 
   const { accounts, fetchAccounts, accountsListState } =
-    AccountsFeature.hooks.useAccountsList({ t: tPage, message });
+    AccountsFeature.hooks.useAccountsList({ t, message });
 
   const { accountRoles, fetchAccountRoles } =
-    AccountRolesFeature.hooks.useAccountRolesList({ t: tPage, message });
+    AccountRolesFeature.hooks.useAccountRolesList({ t, message });
 
   // # region Create Account
 

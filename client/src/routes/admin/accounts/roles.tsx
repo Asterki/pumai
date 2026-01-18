@@ -10,7 +10,13 @@ import { App, Button, Input, Modal, Drawer, Typography, Switch } from "antd";
 const { Title, Text } = Typography;
 
 import AdminPageLayout from "../../../layouts/Admin";
-import { FaPlus, FaSave, FaTrash, FaUsersCog } from "react-icons/fa";
+import {
+  FaPlus,
+  FaSave,
+  FaTrash,
+  FaUsersCog,
+  FaUserShield,
+} from "react-icons/fa";
 
 import AccountRolesFeature, {
   IAccountRole,
@@ -26,99 +32,42 @@ function RouteComponent() {
 
   const navigate = useNavigate();
   const { message } = App.useApp();
-  const { t } = useTranslation(["main", "dashboard"]);
+
+  const { t: tPage } = useTranslation(["pages"], {
+    keyPrefix: "admin.account-roles",
+  });
+  const { t: tCommon } = useTranslation(["common"]);
 
   const { accountRoles, fetchAccountRoles, accountRolesListState } =
-    AccountRolesFeature.hooks.useAccountRolesList({ message, t });
+    AccountRolesFeature.hooks.useAccountRolesList({});
 
-  //#region Create Role
+  // Create Role
   const {
-    form: createAccountRoleForm,
-    validate: createAccountRoleValidation,
-    defaultValues: createAccountRoleDefaultValues,
-    onValuesChange: createAccountRoleOnvaluesChange,
-  } = AccountRolesFeature.hooks.useCreateAccountRoleFormValidation(t);
-
-  const [createAccountRoleModalState, setCreateAccountRoleModalState] =
-    useState<{
-      isOpen: boolean;
-      loading: boolean;
-    }>({
-      isOpen: false,
-      loading: false,
-    });
-  const resetCreateAccountModalState = () => {
-    setCreateAccountRoleModalState({ isOpen: false, loading: false });
-    createAccountRoleForm.resetFields();
-  };
-
-  const handleCreateAccountRole = async () => {
-    if (createAccountRoleModalState.loading) return;
-
-    // Use hook’s validate method — sets form errors internally
-    const values = createAccountRoleForm.getFieldsValue(true);
-    if (!createAccountRoleValidation(values)) {
-      return;
-    }
-
-    setCreateAccountRoleModalState((prev) => ({ ...prev, loading: true }));
-    const result = await AccountRolesFeature.api.create(values);
-
-    if (result.status === "success") {
-      message.success(t("dashboard:roles.modals.create.messages.success"));
-
-      createAccountRoleForm.resetFields();
-      setCreateAccountRoleModalState({ isOpen: false, loading: false });
-
+    openModal: openCreateAccountRoleModal,
+    closeModal: closeCreateAccountRoleModal,
+    setState: setCreateAccountRoleModalState,
+    state: createAccountRoleModalState,
+    createAccount: handleCreateAccountRole,
+  } = AccountRolesFeature.hooks.useCreateAccountRoleModal({
+    onSuccess: async () => {
       await fetchAccountRoles({});
-    } else if (result.status === "level-in-use") {
-      setCreateAccountRoleModalState((prev) => ({ ...prev, loading: false }));
-      message.error(t("dashboard:roles.modals.create.messages.level-in-use"));
-    } else if (result.status === "level-too-high") {
-      setCreateAccountRoleModalState((prev) => ({ ...prev, loading: false }));
-      message.error(t("dashboard:roles.modals.create.messages.level-too-high"));
-    } else {
-      setCreateAccountRoleModalState((prev) => ({ ...prev, loading: false }));
-      message.error(t(`error-messages:${result.status}`));
-    }
-  };
-  //#endregion
+    },
+  });
 
-  //#region Delete Role
-  type DeleteAccountRoleModalState = RolesAPITypes.DeleteRequestBody & {
-    isOpen: boolean;
-    loading: boolean;
-  };
-  const defaultDeleteAccountRoleModalState: DeleteAccountRoleModalState = {
-    loading: false,
-    isOpen: false,
-    roleId: "",
-  };
-
-  const resetDeleteAccountRoleModalState = () =>
-    setDeleteAccountRoleModalState(defaultDeleteAccountRoleModalState);
-
-  const [deleteAccountRoleModalState, setDeleteAccountRoleModalState] =
-    useState<DeleteAccountRoleModalState>(defaultDeleteAccountRoleModalState);
-  const deleteRole = async () => {
-    if (deleteAccountRoleModalState.roleId == null) return;
-
-    setDeleteAccountRoleModalState((prev) => ({ ...prev, loading: true }));
-    const result = await AccountRolesFeature.api.delete({
-      roleId: deleteAccountRoleModalState.roleId,
-    });
-
-    if (result.status == "success") {
-      message.success(t("dashboard:roles.modals.delete.messages.success"));
-      setDeleteAccountRoleModalState(defaultDeleteAccountRoleModalState);
-
-      await fetchAccountRoles({ count: 50, page: 0 });
-    } else {
-      setDeleteAccountRoleModalState((prev) => ({ ...prev, loading: true }));
-      message.error(t(`error-messages:${result.status}`));
-    }
-  };
-  //#endregion
+  // Delete Role
+  const { t: tDeleteModal } = useTranslation(["features"], {
+    keyPrefix: "account-roles.components.deleteModal",
+  });
+  const {
+    openModal: openDeleteAccountRoleModal,
+    closeModal: closeDeleteAccountRoleModal,
+    state: deleteAccountRoleModalState,
+    deleteAccount: handleDeleteAccountRole,
+  } = AccountRolesFeature.hooks.useDeleteAccountRoleModal({
+    onSuccess: async () => {
+      await fetchAccountRoles({});
+    },
+  });
 
   //#region Restore a role
   const handleRestoreAccountRole = async (accId: string) => {
@@ -128,10 +77,10 @@ function RouteComponent() {
     });
 
     if (result.status == "success") {
-      message.success(t("dashboard:roles.modals.restore.messages.success"));
+      message.success(tPage("dashboard:roles.modals.restore.messages.success"));
       fetchAccountRoles({ count: 50, page: 0 });
     } else {
-      message.error(t(`error-messages:${result.status}`));
+      message.error(tPage(`error-messages:${result.status}`));
     }
   };
   //#endregion
@@ -142,7 +91,7 @@ function RouteComponent() {
     validate: updateAccountRoleValidation,
     defaultValues: updateAccountRoleDefaultValues,
     onValuesChange: updateAccountRoleOnvaluesChange,
-  } = AccountRolesFeature.hooks.useUpdateAccountRoleFormValidation(t);
+  } = AccountRolesFeature.hooks.useUpdateAccountRoleFormValidation(tPage);
 
   const loadUpdateAccountRole = async (roleId: string) => {
     if (!roleId) return;
@@ -162,7 +111,7 @@ function RouteComponent() {
         });
       }
     } else {
-      message.error(t(`error-messages:${result.status}`));
+      message.error(tPage(`error-messages:${result.status}`));
     }
   };
 
@@ -192,7 +141,7 @@ function RouteComponent() {
     const result = await AccountRolesFeature.api.update(values);
 
     if (result.status === "success") {
-      message.success(t("dashboard:roles.modals.update.messages.success"));
+      message.success(tPage("dashboard:roles.modals.update.messages.success"));
 
       updateAccountRoleForm.resetFields();
       setUpdateAccountRoleModalState({ isOpen: false, loading: false });
@@ -200,13 +149,17 @@ function RouteComponent() {
       await fetchAccountRoles({});
     } else if (result.status === "level-in-use") {
       setCreateAccountRoleModalState((prev) => ({ ...prev, loading: false }));
-      message.error(t("dashboard:roles.modals.create.messages.level-in-use"));
+      message.error(
+        tPage("dashboard:roles.modals.create.messages.level-in-use"),
+      );
     } else if (result.status === "level-too-high") {
       setCreateAccountRoleModalState((prev) => ({ ...prev, loading: false }));
-      message.error(t("dashboard:roles.modals.create.messages.level-too-high"));
+      message.error(
+        tPage("dashboard:roles.modals.create.messages.level-too-high"),
+      );
     } else {
       setUpdateAccountRoleModalState((prev) => ({ ...prev, loading: false }));
-      message.error(t(`error-messages:${result.status}`));
+      message.error(tPage(`error-messages:${result.status}`));
     }
   };
   //#endregion
@@ -217,8 +170,8 @@ function RouteComponent() {
       !account.data.role.permissions.includes("account-roles:read") &&
       !account.data.role.permissions.includes("*")
     ) {
-      message.error(t("error-messages:forbidden"));
-      navigate({ to: "/dashboard" });
+      message.error(tPage("error-messages:forbidden"));
+      navigate({ to: "/admin" });
       return;
     } else {
       (async () => {
@@ -228,33 +181,18 @@ function RouteComponent() {
   }, [account]);
 
   return (
-    <AdminPageLayout selectedPage="roles">
+    <AdminPageLayout selectedPage="account-roles">
       {/* Create Role */}
-      <Modal
-        title={t("dashboard:roles.modals.create.title")}
-        open={createAccountRoleModalState.isOpen}
-        onOk={handleCreateAccountRole}
-        okText={t("dashboard:common.create")}
-        okButtonProps={{
-          variant: "solid",
-          loading: createAccountRoleModalState.loading,
-          disabled: createAccountRoleModalState.loading,
-          icon: <FaPlus />,
-        }}
-        cancelText={t("dashboard:common.cancel")}
-        onCancel={resetCreateAccountModalState}
-      >
-        <AccountRolesFeature.components.CreateAccountRoleForm
-          defaultValues={createAccountRoleDefaultValues}
-          form={createAccountRoleForm}
-          onValuesChange={createAccountRoleOnvaluesChange}
-          t={t}
-        />
-      </Modal>
+      <AccountRolesFeature.components.CreateAccountRoleModal
+        onClose={closeCreateAccountRoleModal}
+        onCreate={handleCreateAccountRole}
+        state={createAccountRoleModalState}
+        setState={setCreateAccountRoleModalState}
+      />
 
       {/* Update Role */}
       <Drawer
-        title={t("dashboard:roles.modals.update.title")}
+        title={tPage("dashboard:roles.modals.update.title")}
         open={updateAccountRoleModalState.isOpen}
         onClose={resetUpdateAccountModalState}
         width={1000}
@@ -265,7 +203,7 @@ function RouteComponent() {
             loading={updateAccountRoleModalState.loading}
             onClick={handleAccountRoleUpdate}
           >
-            {t("dashboard:common.save")}
+            {tPage("dashboard:common.save")}
           </Button>
         }
       >
@@ -278,34 +216,34 @@ function RouteComponent() {
 
       {/* Delete Role */}
       <Modal
-        title={t("dashboard:roles.modals.delete.title")}
+        title={tDeleteModal("title")}
         open={deleteAccountRoleModalState.isOpen}
-        onOk={deleteRole}
+        onOk={handleDeleteAccountRole}
         okButtonProps={{
           icon: <FaTrash />,
           loading: deleteAccountRoleModalState.loading,
           danger: true,
         }}
-        okText={t("dashboard:common.delete")}
-        cancelText={t("dashboard:common.cancel")}
-        onCancel={resetDeleteAccountRoleModalState}
+        okText={tCommon("delete")}
+        cancelText={tCommon("cancel")}
+        onCancel={closeDeleteAccountRoleModal}
       >
-        <p>{t("dashboard:roles.modals.delete.description")}</p>
+        <p>{tDeleteModal("description")}</p>
       </Modal>
 
       <div className="mb-2">
-        {t("dashboard:common.loggedInAs", {
+        {tPage("dashboard:common.loggedInAs", {
           name: account?.profile.name,
           email: account?.email.value,
         })}
       </div>
 
       <Title className="flex items-center gap-2">
-        <FaUsersCog />
-        {t("dashboard:roles.page.title")}
+        <FaUserShield />
+        {tPage("title")}
       </Title>
 
-      <Text>{t("dashboard:roles.page.description")}</Text>
+      <Text>{tPage("description")}</Text>
 
       <div className="my-2 flex items-center gap-2">
         <Button
@@ -319,14 +257,11 @@ function RouteComponent() {
             )
           }
           onClick={() => {
-            setCreateAccountRoleModalState({
-              ...createAccountRoleModalState,
-              isOpen: true,
-            });
+            openCreateAccountRoleModal();
           }}
           icon={<FaPlus />}
         >
-          {t("dashboard:roles.page.createRole")}
+          {tPage("createRole")}
         </Button>
       </div>
 
@@ -348,8 +283,8 @@ function RouteComponent() {
             });
           }}
           loading={accountRolesListState.loading}
-          enterButton={t("dashboard:common.search")}
-          placeholder={t("dashboard:roles.page.searchPlaceholder")}
+          enterButton={tCommon("search")}
+          placeholder={tPage("searchPlaceholder")}
         />
       </div>
 
@@ -358,7 +293,6 @@ function RouteComponent() {
         <AccountRolesFeature.components.AccountRolesTable
           fetchAccountRoles={fetchAccountRoles}
           accountRoles={accountRoles}
-          t={t}
           accountRolesListState={accountRolesListState}
           accountPermissions={(account.data.role as IAccountRole).permissions}
           onRestore={(accRole) => {
@@ -377,11 +311,7 @@ function RouteComponent() {
             await loadUpdateAccountRole(acc._id);
           }}
           onDelete={(accRole) => {
-            setDeleteAccountRoleModalState({
-              isOpen: true,
-              loading: false,
-              roleId: accRole._id,
-            });
+            openDeleteAccountRoleModal(accRole._id);
           }}
         />
       )}
@@ -397,9 +327,7 @@ function RouteComponent() {
           }}
         />
 
-        <label htmlFor="page-show-deleted">
-          {t("dashboard:roles.page.showDeleted")}
-        </label>
+        <label htmlFor="page-show-deleted">{tPage("showDeleted")}</label>
       </div>
     </AdminPageLayout>
   );

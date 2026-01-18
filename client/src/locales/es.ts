@@ -24,6 +24,17 @@ const translation = {
   common: {
     loggedInAs: "Conectado como {{name}} ({{email}})",
     search: "Buscar",
+    cancel: "Cancelar",
+    yes: "Sí",
+    no: "No",
+    save: "Guardar",
+    update: "Actualizar",
+    delete: "Eliminar",
+    back: "Regresar",
+    create: "Crear",
+    actions: "Acciones",
+    confirm: "Confirmar",
+    loading: "Cargando...",
   },
 
   features: {
@@ -110,6 +121,64 @@ const translation = {
         },
       },
     },
+    "account-roles": {
+      components: {
+        table: {
+          name: "Nombre del Rol",
+          description: "Descripción",
+          actions: "Acciones",
+          level: "Nivel de Permiso",
+          totalPermissions: "Total de Permisos",
+          createdAt: "Creado El",
+
+          total: "Mostrando {{range}} de {{total}} roles de cuenta",
+          deleted: "Este rol ha sido eliminado",
+
+          actionButtons: {
+            trigger: "Acciones",
+            update: "Actualizar",
+            delete: "Eliminar",
+            restore: "Restaurar",
+          },
+        },
+
+        createModal: {
+          title: "Crear Nuevo Rol de Cuenta",
+          fields: {
+            name: "Nombre del Rol",
+            namePlaceholder: "Ingrese el nombre del rol",
+            description: "Descripción",
+            descriptionPlaceholder: "Ingrese una descripción para el rol",
+            level: "Nivel de Permiso",
+            levelPlaceholder: "Ingrese el nivel de permiso (número)",
+          },
+        },
+
+        deleteModal: {
+          title: "Eliminar Rol de Cuenta",
+          description:
+            "¿Está seguro de que desea eliminar este rol de cuenta? Esta acción se puede revertir más tarde.",
+        },
+      },
+
+      hooks: {
+        useCreateModal: {
+          messages: {
+            success: "Rol de cuenta creado exitosamente.",
+            error:
+              "Error al crear el rol de cuenta. Por favor, intente nuevamente.",
+          },
+        },
+
+        useDeleteModal: {
+          messages: {
+            success: "Rol de cuenta eliminado exitosamente.",
+            error:
+              "Error al eliminar el rol de cuenta. Por favor, intente nuevamente.",
+          },
+        },
+      },
+    },
   },
 
   layouts: {
@@ -191,13 +260,19 @@ const translation = {
         },
       },
       accounts: {
-        index: {
-          title: "Gestión de Cuentas",
-          description: "Administra las cuentas de usuario dentro del sistema.",
-          createAccount: "Crear Nueva Cuenta",
-          searchPlaceholder: "Buscar por nombre o correo electrónico",
-          showDeleted: "Mostrar Cuentas Eliminadas",
-        },
+        title: "Gestión de Cuentas",
+        description: "Administra las cuentas de usuario dentro del sistema.",
+        createAccount: "Crear Nueva Cuenta",
+        searchPlaceholder: "Buscar por nombre o correo electrónico",
+        showDeleted: "Mostrar Cuentas Eliminadas",
+      },
+      "account-roles": {
+        title: "Gestión de Roles de Cuenta",
+        description:
+          "Administra los roles y permisos de las cuentas de usuario.",
+        createRole: "Crear Nuevo Rol de Cuenta",
+        searchPlaceholder: "Buscar por nombre o descripción",
+        showDeleted: "Mostrar Roles Eliminados",
       },
     },
   },
