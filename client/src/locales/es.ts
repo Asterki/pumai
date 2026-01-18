@@ -194,7 +194,7 @@ const translation = {
     admin: {
       sidebar: {
         title: "Panel de Administración PumAI",
-        documents: "Documentos",
+        "rag-documents": "Documentos RAG",
         dashboard: "Panel de Control",
         chat: "Chat AI",
         accounts: "Cuentas",
@@ -252,8 +252,8 @@ const translation = {
           index: "Panel De Control",
           title: "Panel de Control",
 
-          documents: {
-            title: "Gestión de Documentos",
+          "rag-documents": {
+            title: "Gestión de Documentos RAG",
             description:
               "Administra y organiza todos los documentos que la IA puede utilizar para responder a las consultas de los usuarios.",
           },
@@ -283,6 +283,14 @@ const translation = {
         createRole: "Crear Nuevo Rol de Cuenta",
         searchPlaceholder: "Buscar por nombre o descripción",
         showDeleted: "Mostrar Roles Eliminados",
+      },
+      "rag-documents": {
+        title: "Gestión de Documentos RAG",
+        description:
+          "Administra y organiza todos los documentos que la IA puede utilizar para responder a las consultas de los usuarios.",
+        uploadDocument: "Subir Nuevo Documento",
+        searchPlaceholder: "Buscar por nombre o contenido",
+        showDeleted: "Mostrar Documentos Eliminados",
       },
     },
   },

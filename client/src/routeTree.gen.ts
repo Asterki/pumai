@@ -15,7 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AdminLogsRouteImport } from './routes/admin/logs'
-import { Route as AdminDocumentsIndexRouteImport } from './routes/admin/documents/index'
+import { Route as AdminRagDocumentsIndexRouteImport } from './routes/admin/rag-documents/index'
 import { Route as AdminAccountsIndexRouteImport } from './routes/admin/accounts/index'
 import { Route as AdminAccountsRolesRouteImport } from './routes/admin/accounts/roles'
 
@@ -49,9 +49,9 @@ const AdminLogsRoute = AdminLogsRouteImport.update({
   path: '/admin/logs',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminDocumentsIndexRoute = AdminDocumentsIndexRouteImport.update({
-  id: '/admin/documents/',
-  path: '/admin/documents/',
+const AdminRagDocumentsIndexRoute = AdminRagDocumentsIndexRouteImport.update({
+  id: '/admin/rag-documents/',
+  path: '/admin/rag-documents/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminAccountsIndexRoute = AdminAccountsIndexRouteImport.update({
@@ -74,7 +74,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminIndexRoute
   '/admin/accounts/roles': typeof AdminAccountsRolesRoute
   '/admin/accounts': typeof AdminAccountsIndexRoute
-  '/admin/documents': typeof AdminDocumentsIndexRoute
+  '/admin/rag-documents': typeof AdminRagDocumentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -85,7 +85,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/admin/accounts/roles': typeof AdminAccountsRolesRoute
   '/admin/accounts': typeof AdminAccountsIndexRoute
-  '/admin/documents': typeof AdminDocumentsIndexRoute
+  '/admin/rag-documents': typeof AdminRagDocumentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -97,7 +97,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/admin/accounts/roles': typeof AdminAccountsRolesRoute
   '/admin/accounts/': typeof AdminAccountsIndexRoute
-  '/admin/documents/': typeof AdminDocumentsIndexRoute
+  '/admin/rag-documents/': typeof AdminRagDocumentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -110,7 +110,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/accounts/roles'
     | '/admin/accounts'
-    | '/admin/documents'
+    | '/admin/rag-documents'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -121,7 +121,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/accounts/roles'
     | '/admin/accounts'
-    | '/admin/documents'
+    | '/admin/rag-documents'
   id:
     | '__root__'
     | '/'
@@ -132,7 +132,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/admin/accounts/roles'
     | '/admin/accounts/'
-    | '/admin/documents/'
+    | '/admin/rag-documents/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -144,7 +144,7 @@ export interface RootRouteChildren {
   AdminIndexRoute: typeof AdminIndexRoute
   AdminAccountsRolesRoute: typeof AdminAccountsRolesRoute
   AdminAccountsIndexRoute: typeof AdminAccountsIndexRoute
-  AdminDocumentsIndexRoute: typeof AdminDocumentsIndexRoute
+  AdminRagDocumentsIndexRoute: typeof AdminRagDocumentsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -191,11 +191,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLogsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/documents/': {
-      id: '/admin/documents/'
-      path: '/admin/documents'
-      fullPath: '/admin/documents'
-      preLoaderRoute: typeof AdminDocumentsIndexRouteImport
+    '/admin/rag-documents/': {
+      id: '/admin/rag-documents/'
+      path: '/admin/rag-documents'
+      fullPath: '/admin/rag-documents'
+      preLoaderRoute: typeof AdminRagDocumentsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/accounts/': {
@@ -224,7 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminIndexRoute: AdminIndexRoute,
   AdminAccountsRolesRoute: AdminAccountsRolesRoute,
   AdminAccountsIndexRoute: AdminAccountsIndexRoute,
-  AdminDocumentsIndexRoute: AdminDocumentsIndexRoute,
+  AdminRagDocumentsIndexRoute: AdminRagDocumentsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

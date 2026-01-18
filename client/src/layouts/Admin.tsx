@@ -115,8 +115,10 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
     },
 
     {
-      key: "documents",
-      label: <Link to="/admin/documents">{t("sidebar.documents")}</Link>,
+      key: "rag-documents",
+      label: (
+        <Link to="/admin/rag-documents">{t("sidebar.rag-documents")}</Link>
+      ),
       icon: <FaFile />, // Better for dashboards
     },
 

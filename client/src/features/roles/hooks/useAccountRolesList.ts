@@ -42,7 +42,7 @@ export function useAccountRolesList({
     page: 0,
   });
 
-  const [accountRoles, setAccountRoless] = useState<{
+  const [accountRoles, setAccountRoles] = useState<{
     totalAccountRoles: number;
     accountRoles: ListAccountRole[];
   }>({
@@ -77,7 +77,7 @@ export function useAccountRolesList({
           };
         });
 
-        setAccountRoless({
+        setAccountRoles({
           accountRoles: result.accountRoles!.map((role) => ({
             _id: role._id.toString(),
             name: role.name ?? "",
