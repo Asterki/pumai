@@ -15,6 +15,13 @@ module.exports = {
       animation: {
         gradient: "gradient 6s ease-in-out infinite",
       },
+
+      // Custom colors
+      colors: {
+        primary: {
+          DEFAULT: "#1e3976",
+        },
+      },
     },
   },
 };

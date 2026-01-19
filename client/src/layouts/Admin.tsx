@@ -13,6 +13,8 @@ import {
   FaTerminal,
   FaUserShield,
   FaUsers,
+  FaCompressArrowsAlt,
+  FaPaperPlane,
 } from "react-icons/fa";
 import { IoMdCube } from "react-icons/io";
 
@@ -101,14 +103,42 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
   const menuItems: Array<MenuItemType> = [
     // === Overview & Core ===
     {
-      key: "documents",
-      label: <Link to="/admin/documents">{t("sidebar.documents")}</Link>,
+      key: "dashboard",
+      label: <Link to="/admin">{t("sidebar.dashboard")}</Link>,
+      icon: <FaCompressArrowsAlt />, // Better for dashboards
+    },
+
+    {
+      key: "chat",
+      label: <Link to="/chat">{t("sidebar.chat")}</Link>,
+      icon: <FaPaperPlane />, // Better for dashboards
+    },
+
+    {
+      key: "rag-documents",
+      label: (
+        <Link to="/admin/rag-documents">{t("sidebar.rag-documents")}</Link>
+      ),
       icon: <FaFile />, // Better for dashboards
     },
 
     {
+      key: "accounts",
+      label: <Link to="/admin/accounts">{t("sidebar.accounts")}</Link>,
+      icon: <FaUsers />, // Better for dashboards
+    },
+
+    {
+      key: "account-roles",
+      label: (
+        <Link to="/admin/accounts/roles">{t("sidebar.account-roles")}</Link>
+      ),
+      icon: <FaUserShield />, // Better for dashboards
+    },
+
+    {
       key: "logs",
-      label: <Link to="/">{t("sidebar.logs")}</Link>,
+      label: <Link to="/admin/logs">{t("sidebar.logs")}</Link>,
       icon: <FaTerminal />, // Better for dashboards
     },
   ];
@@ -179,10 +209,7 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
   const isDark = userPreferences?.theme === "dark";
 
   return (
-    <ConfigProvider
-      locale={esES}
-      theme={isDark ? darkTheme : lightTheme}
-    >
+    <ConfigProvider locale={esES} theme={isDark ? darkTheme : lightTheme}>
       {/* Top Navbar */}
       <Header
         className={`px-4 flex items-center justify-between bg-white dark:bg-neutral-800 ${isDark ? "dark" : ""}`}
@@ -238,7 +265,10 @@ export default function PageLayout({ children, selectedPage }: LayoutProps) {
         </Drawer>
 
         {/* Main Content */}
-        <Layout style={{ background: "transparent" }}>
+        <Layout
+          style={{ background: "transparent" }}
+          className={`min-h-screen ${isDark ? "dark" : ""}`}
+        >
           <div className="p-6 dark:text-white min-h-[calc(100vh-64px)]">
             {account && children}
             {!account && (

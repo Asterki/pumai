@@ -1,11 +1,11 @@
 import axios from "axios";
-import * as AccountsAPITypes from "../../../../shared/api/accounts";
+import * as RAGDocumentsAPITypes from "../../../../shared/api/rag-documents";
 import ApiUtils from "../../utils/api";
 
 const baseUrl =
   import.meta.env.MODE === "development"
-    ? import.meta.env.VITE_SERVER_URL + "/api/accounts"
-    : "/api/accounts";
+    ? import.meta.env.VITE_SERVER_URL + "/api/rag-documents"
+    : "/api/rag-documents";
 
 // Create an Axios client with credentials enabled by default
 const axiosClient = axios.create({
@@ -15,11 +15,11 @@ const axiosClient = axios.create({
 
 export const categoriesApi = {
   async create(
-    data: AccountsAPITypes.CreateRequestBody,
-  ): Promise<AccountsAPITypes.CreateResponseData> {
+    data: RAGDocumentsAPITypes.CreateRequestBody,
+  ): Promise<RAGDocumentsAPITypes.CreateResponseData> {
     try {
       const response =
-        await axiosClient.post<AccountsAPITypes.CreateResponseData>(
+        await axiosClient.post<RAGDocumentsAPITypes.CreateResponseData>(
           "/create",
           data,
         );
@@ -30,13 +30,14 @@ export const categoriesApi = {
   },
 
   async get(
-    data: AccountsAPITypes.GetRequestBody,
-  ): Promise<AccountsAPITypes.GetResponseData> {
+    data: RAGDocumentsAPITypes.GetRequestBody,
+  ): Promise<RAGDocumentsAPITypes.GetResponseData> {
     try {
-      const response = await axiosClient.post<AccountsAPITypes.GetResponseData>(
-        "/get",
-        data,
-      );
+      const response =
+        await axiosClient.post<RAGDocumentsAPITypes.GetResponseData>(
+          "/get",
+          data,
+        );
       return response.data;
     } catch (error) {
       return ApiUtils.handleAxiosError(error);
@@ -44,11 +45,11 @@ export const categoriesApi = {
   },
 
   async update(
-    data: AccountsAPITypes.UpdateRequestBody,
-  ): Promise<AccountsAPITypes.UpdateResponseData> {
+    data: RAGDocumentsAPITypes.UpdateRequestBody,
+  ): Promise<RAGDocumentsAPITypes.UpdateResponseData> {
     try {
       const response =
-        await axiosClient.post<AccountsAPITypes.UpdateResponseData>(
+        await axiosClient.post<RAGDocumentsAPITypes.UpdateResponseData>(
           "/update",
           data,
         );
@@ -59,11 +60,11 @@ export const categoriesApi = {
   },
 
   async delete(
-    data: AccountsAPITypes.DeleteRequestBody,
-  ): Promise<AccountsAPITypes.DeleteResponseData> {
+    data: RAGDocumentsAPITypes.DeleteRequestBody,
+  ): Promise<RAGDocumentsAPITypes.DeleteResponseData> {
     try {
       const response =
-        await axiosClient.post<AccountsAPITypes.DeleteResponseData>(
+        await axiosClient.post<RAGDocumentsAPITypes.DeleteResponseData>(
           "/delete",
           data,
         );
@@ -74,11 +75,11 @@ export const categoriesApi = {
   },
 
   async restore(
-    data: AccountsAPITypes.RestoreRequestBody,
-  ): Promise<AccountsAPITypes.RestoreResponseData> {
+    data: RAGDocumentsAPITypes.RestoreRequestBody,
+  ): Promise<RAGDocumentsAPITypes.RestoreResponseData> {
     try {
       const response =
-        await axiosClient.post<AccountsAPITypes.RestoreResponseData>(
+        await axiosClient.post<RAGDocumentsAPITypes.RestoreResponseData>(
           "/restore",
           data,
         );
@@ -89,11 +90,11 @@ export const categoriesApi = {
   },
 
   async list(
-    data: AccountsAPITypes.ListRequestBody,
-  ): Promise<AccountsAPITypes.ListResponseData> {
+    data: RAGDocumentsAPITypes.ListRequestBody,
+  ): Promise<RAGDocumentsAPITypes.ListResponseData> {
     try {
       const response =
-        await axiosClient.post<AccountsAPITypes.ListResponseData>(
+        await axiosClient.post<RAGDocumentsAPITypes.ListResponseData>(
           "/list",
           data,
         );

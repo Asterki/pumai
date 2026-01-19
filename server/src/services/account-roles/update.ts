@@ -19,7 +19,6 @@ type UpdateAccountRoleParameters = {
 type UpdateAccountRoleOptions = {
   session?: mongoose.ClientSession;
   traceId?: string;
-  terminalId?: mongoose.Types.ObjectId;
   adminAccount?: IAccount;
 };
 
@@ -87,12 +86,10 @@ export async function updateAccountRole(
     if (adminAccount) {
       role.metadata.updatedBy = adminAccount._id;
     }
-    role.metadata.updatedByTerminal = options.terminalId;
     role.metadata.updateHistory = role.metadata.updateHistory || [];
     role.metadata.updateHistory.push({
       updatedAt: now,
       updatedBy: adminAccount?._id,
-      updatedByTerminal: options.terminalId,
       changes,
     });
 
@@ -114,7 +111,6 @@ export async function updateAccountRole(
       metadata: {
         createdAt: role.metadata.createdAt,
         createdBy: role.metadata.createdBy,
-        createdByTerminal: options.terminalId,
       },
     });
 

@@ -21,6 +21,22 @@ const translation = {
       "La consulta proporcionada es demasiado larga. Por favor, reduzca la longitud de la consulta.",
   },
 
+  common: {
+    loggedInAs: "Conectado como {{name}} ({{email}})",
+    search: "Buscar",
+    cancel: "Cancelar",
+    yes: "Sí",
+    no: "No",
+    save: "Guardar",
+    update: "Actualizar",
+    delete: "Eliminar",
+    back: "Regresar",
+    create: "Crear",
+    actions: "Acciones",
+    confirm: "Confirmar",
+    loading: "Cargando...",
+  },
+
   features: {
     preferences: {
       components: {
@@ -69,6 +85,100 @@ const translation = {
         },
       },
     },
+    accounts: {
+      components: {
+        table: {
+          name: "Nombre",
+          email: "Correo Electrónico",
+          role: "Rol",
+          deleted: "Eliminado",
+          actions: "Acciones",
+
+          total: "Mostrando {{range}} de {{total}} cuentas",
+
+          actionButtons: {
+            trigger: "Acciones",
+            update: "Actualizar",
+            changePassword: "Cambiar Contraseña",
+            delete: "Eliminar",
+            restore: "Restaurar",
+            updateStatus: "Actualizar Estado",
+          },
+        },
+
+        createModal: {
+          title: "Crear Nueva Cuenta",
+          fields: {
+            name: "Nombre",
+            namePlaceholder: "Ingrese el nombre completo",
+            email: "Correo Electrónico",
+            emailPlaceholder: "Ingrese la dirección de correo electrónico",
+            password: "Contraseña",
+            passwordPlaceholder: "Ingrese una contraseña segura",
+            role: "Rol",
+            selectRole: "Seleccione un rol",
+          },
+        },
+      },
+    },
+    "account-roles": {
+      components: {
+        table: {
+          name: "Nombre del Rol",
+          description: "Descripción",
+          actions: "Acciones",
+          level: "Nivel de Permiso",
+          totalPermissions: "Total de Permisos",
+          createdAt: "Creado El",
+
+          total: "Mostrando {{range}} de {{total}} roles de cuenta",
+          deleted: "Este rol ha sido eliminado",
+
+          actionButtons: {
+            trigger: "Acciones",
+            update: "Actualizar",
+            delete: "Eliminar",
+            restore: "Restaurar",
+          },
+        },
+
+        createModal: {
+          title: "Crear Nuevo Rol de Cuenta",
+          fields: {
+            name: "Nombre del Rol",
+            namePlaceholder: "Ingrese el nombre del rol",
+            description: "Descripción",
+            descriptionPlaceholder: "Ingrese una descripción para el rol",
+            level: "Nivel de Permiso",
+            levelPlaceholder: "Ingrese el nivel de permiso (número)",
+          },
+        },
+
+        deleteModal: {
+          title: "Eliminar Rol de Cuenta",
+          description:
+            "¿Está seguro de que desea eliminar este rol de cuenta? Esta acción se puede revertir más tarde.",
+        },
+      },
+
+      hooks: {
+        useCreateModal: {
+          messages: {
+            success: "Rol de cuenta creado exitosamente.",
+            error:
+              "Error al crear el rol de cuenta. Por favor, intente nuevamente.",
+          },
+        },
+
+        useDeleteModal: {
+          messages: {
+            success: "Rol de cuenta eliminado exitosamente.",
+            error:
+              "Error al eliminar el rol de cuenta. Por favor, intente nuevamente.",
+          },
+        },
+      },
+    },
   },
 
   layouts: {
@@ -84,8 +194,12 @@ const translation = {
     admin: {
       sidebar: {
         title: "Panel de Administración PumAI",
-        documents: "Documentos",
-        logs: "Registros",
+        "rag-documents": "Documentos RAG",
+        dashboard: "Panel de Control",
+        chat: "Chat AI",
+        accounts: "Cuentas",
+        "account-roles": "Roles de Cuenta",
+        logs: "Registros Técnicos",
       },
     },
   },
@@ -132,35 +246,52 @@ const translation = {
           afternoon: "Buenas tardes",
           evening: "Buenas noches",
         },
-        description:
-          "Bienvenido al sistema administrativo del Hospital San Benito José. Aquí puedes gestionar todos los aspectos relacionados con la administración del hospital, incluyendo pacientes, citas, personal médico y más.",
+        description: "Bienvenido al sistema administrativo de PumAI.",
 
         items: {
           index: "Panel De Control",
           title: "Panel de Control",
-          pharmacy: "Farmacia",
-          preclinic: "Preclínica",
-          consulting: "Consultorio",
-          patients: "Pacientes",
-          accounts: "Cuentas",
-          "account-roles": "Roles de Cuentas",
-          emails: "Correos Electrónicos",
-          logs: "Registros Técnicos",
+
+          "rag-documents": {
+            title: "Gestión de Documentos RAG",
+            description:
+              "Administra y organiza todos los documentos que la IA puede utilizar para responder a las consultas de los usuarios.",
+          },
+          accounts: {
+            title: "Gestión de Cuentas",
+            description:
+              "Administra las cuentas de usuario dentro del sistema.",
+          },
+          "account-roles": {
+            title: "Gestión de Roles de Cuenta",
+            description:
+              "Administra los roles y permisos de las cuentas de usuario.",
+          },
         },
       },
-    },
-  },
-
-  dashboard: {
-    componentes: {
-      navbar: {},
-    },
-
-    sidebar: {
-      title: "Dashboard",
-      chat: "Chat",
-      preferences: "Preferencias",
-      about: "Acerca de",
+      accounts: {
+        title: "Gestión de Cuentas",
+        description: "Administra las cuentas de usuario dentro del sistema.",
+        createAccount: "Crear Nueva Cuenta",
+        searchPlaceholder: "Buscar por nombre o correo electrónico",
+        showDeleted: "Mostrar Cuentas Eliminadas",
+      },
+      "account-roles": {
+        title: "Gestión de Roles de Cuenta",
+        description:
+          "Administra los roles y permisos de las cuentas de usuario.",
+        createRole: "Crear Nuevo Rol de Cuenta",
+        searchPlaceholder: "Buscar por nombre o descripción",
+        showDeleted: "Mostrar Roles Eliminados",
+      },
+      "rag-documents": {
+        title: "Gestión de Documentos RAG",
+        description:
+          "Administra y organiza todos los documentos que la IA puede utilizar para responder a las consultas de los usuarios.",
+        uploadDocument: "Subir Nuevo Documento",
+        searchPlaceholder: "Buscar por nombre o contenido",
+        showDeleted: "Mostrar Documentos Eliminados",
+      },
     },
   },
 };

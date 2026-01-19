@@ -16,6 +16,7 @@ import {
   FaTerminal,
   FaUser,
   FaUserShield,
+  FaFile,
 } from "react-icons/fa";
 
 import type { RootState } from "../../store";
@@ -36,7 +37,10 @@ function RouteComponent() {
   const navigate = useNavigate();
   const dispatch = useDispatch<typeof import("../../store").store.dispatch>();
   const { account } = useSelector((state: RootState) => state.auth);
-  const { t } = useTranslation(["pages"], { keyPrefix: "admin.index" });
+
+  const { t: tpage } = useTranslation(["pages"], {
+    keyPrefix: "admin.index",
+  });
 
   useEffect(() => {
     if (!account) {
@@ -61,80 +65,45 @@ function RouteComponent() {
     return false;
   };
 
-  const menuItems: Array<MenuItemType> = [
+  const menuItems: Array<{
+    key: string;
+    link: string;
+    label: string;
+    description?: string;
+    icon: React.ReactNode;
+  }> = [
     // === Overview & Core ===
     {
-      key: "pharmacy",
-      label: (
-        <Link to="/pharmacy" className="text-2xl font-bold">
-          {t("items.pharmacy")}
-        </Link>
-      ),
-      icon: <FaPills className="text-6xl" />, // Better for dashboards
-    },
-    {
-      key: "preclinic",
-      label: (
-        <Link to="/pharmacy" className="text-2xl font-bold">
-          {t("items.preclinic")}
-        </Link>
-      ),
-      icon: <FaHospitalSymbol className="text-6xl" />, // Better for dashboards
+      key: "documents",
+      link: "/admin/rag-documents",
+      label: tpage("items.documents.title"),
+      description: tpage("items.documents.description"),
+      icon: <FaFile className="text-6xl" />, // Better for dashboards
     },
 
     {
-      key: "consulting",
-      label: (
-        <Link to="/pharmacy" className="text-2xl font-bold">
-          {t("items.consulting")}
-        </Link>
-      ),
-      icon: <TiCalendar className="text-6xl" />, // Better for dashboards
-    },
-    {
-      key: "patients",
-      label: (
-        <Link to="/pharmacy" className="text-2xl font-bold">
-          {t("items.patients")}
-        </Link>
-      ),
-      icon: <FaUsers className="text-6xl" />,
-    },
-    {
       key: "accounts",
-      label: (
-        <Link to="/dashboard/accounts" className="text-2xl font-bold">
-          {t("items.accounts")}
-        </Link>
-      ),
-      icon: <FaUser className="text-6xl" />,
+      link: "/admin/accounts",
+      label: tpage("items.accounts.title"),
+      description: tpage("items.accounts.description"),
+      icon: <FaUser className="text-6xl" />, // Better for dashboards
     },
+
     {
       key: "account-roles",
-      label: (
-        <Link to="/dashboard/accounts/roles" className="text-2xl font-bold">
-          {t("items.account-roles")}
-        </Link>
-      ),
-      icon: <FaUserShield className="text-6xl" />,
-    },
-    {
-      key: "logs",
-      label: (
-        <Link to="/" className="text-2xl font-bold">
-          {t("items.logs")}
-        </Link>
-      ),
-      icon: <FaTerminal className="text-6xl" />, // Better for dashboards
+      link: "/admin/accounts/roles",
+      label: tpage("items.account-roles.title"),
+      description: tpage("items.account-roles.description"),
+      icon: <FaUserShield className="text-6xl" />, // Better for dashboards
     },
   ];
 
   const greeting =
     new Date().getHours() < 12
-      ? t("greetings.morning")
+      ? tpage("greetings.morning")
       : new Date().getHours() < 18
-        ? t("index.greetings.afternoon")
-        : t("greetings.evening");
+        ? tpage("index.greetings.afternoon")
+        : tpage("greetings.evening");
 
   return (
     <AdminLayout>
@@ -142,21 +111,31 @@ function RouteComponent() {
         <Title level={2} style={{ marginBottom: 24 }}>
           {greeting}, {account?.profile.name}
         </Title>
-        <Paragraph>{t("description")}</Paragraph>
+        <Paragraph>{tpage("description")}</Paragraph>
 
-        <div className="flex gap-2 flex-wrap mt-8 items-center justify-center">
+        <div className="flex gap-2 flex-wrap mt-8 items-stretch justify-center">
           {menuItems.map((item) => (
-            <Card key={item.key} hoverable className="w-1/4">
-              <Link
-                to={item.key === "dashboard" ? "/dashboard" : `/${item.key}`}
-              >
-                <Row align="middle" gutter={16}>
-                  <Col>{item.icon}</Col>
-                  <Col>
-                    <Text>{item.label}</Text>
-                  </Col>
-                </Row>
-              </Link>
+            <Card
+              hoverable
+              className="w-1/4"
+              key={item.key}
+              onClick={() => {
+                navigate({ to: item.link as any });
+              }}
+            >
+              <div className="flex items-center flex-1 justify-center gap-4 h-full">
+                <Col className="text-blue-500">{item.icon}</Col>
+                <Col>
+                  <p className="text-2xl font-bold text-blue-500">
+                    {item.label}
+                  </p>
+                  {item.description && (
+                    <Paragraph type="secondary" style={{ margin: 0 }}>
+                      {item.description}
+                    </Paragraph>
+                  )}
+                </Col>
+              </div>
             </Card>
           ))}
         </div>

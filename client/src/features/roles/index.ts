@@ -1,31 +1,33 @@
 import api from "./api";
-import * as schemas from "../../../../shared/zod-schemas/account-roles";
+import * as schemas from "../../../../shared/schemas/account-roles";
 
-import * as RolesAPITypes from "../../../../shared/types/api/account-roles";
+import * as RolesAPITypes from "../../../../shared/api/account-roles";
 import { IAccountRole } from "../../../../shared/models/account-role";
 
 // Hooks
 import { useAccountRolesList } from "./hooks/useAccountRolesList";
-import { useCreateAccountRoleFormValidation } from "./hooks/useCreateAccountRoleFormValidation";
+import { useCreateAccountRoleModal } from "./hooks/useCreateAccountRoleModal";
+import { useDeleteAccountRoleModal } from "./hooks/useDeleteAccountRoleModal";
 import { useUpdateAccountRoleFormValidation } from "./hooks/useUpdateAccountRoleFormValidation";
 
 // Components
 import { AccountRolesTable } from "./components/AccountRolesTable";
-import { CreateAccountRoleForm } from "./components/CreateAccountRoleForm";
 import { UpdateAccountRoleForm } from "./components/UpdateAccountRoleForm";
+import { CreateAccountRoleModal } from "./components/CreateAccountRoleModal";
 
 export type { IAccountRole, RolesAPITypes };
 export default {
-	api,
-	schemas,
-	hooks: {
-		useAccountRolesList,
-		useCreateAccountRoleFormValidation,
+  api,
+  schemas,
+  hooks: {
+    useAccountRolesList,
     useUpdateAccountRoleFormValidation,
-	},
-	components: {
-		AccountRolesTable,
-		CreateAccountRoleForm,
-		UpdateAccountRoleForm,
-	},
+    useCreateAccountRoleModal,
+    useDeleteAccountRoleModal,
+  },
+  components: {
+    AccountRolesTable,
+    UpdateAccountRoleForm,
+    CreateAccountRoleModal,
+  },
 };

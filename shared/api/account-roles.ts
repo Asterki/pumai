@@ -3,21 +3,21 @@ import { ResponseStatus } from ".";
 import { z } from "zod";
 
 import {
-  createAccountRoleSchema,
-  deleteAccountRoleSchema,
-  getAccountRolesSchema,
-  updateAccountRoleSchema,
-  listAccountRolesSchema,
-  restoreAccountRoleSchema,
+  createSchema,
+  deleteSchema,
+  getSchema,
+  updateSchema,
+  listSchema,
+  restoreSchema,
 } from "../schemas/account-roles";
 
 // Inferred request body types
-export type GetRequestBody = z.infer<typeof getAccountRolesSchema>;
-export type CreateRequestBody = z.infer<typeof createAccountRoleSchema>;
-export type DeleteRequestBody = z.infer<typeof deleteAccountRoleSchema>;
-export type RestoreRequestBody = z.infer<typeof restoreAccountRoleSchema>;
-export type UpdateRequestBody = z.infer<typeof updateAccountRoleSchema>;
-export type ListRequestBody = z.infer<typeof listAccountRolesSchema>;
+export type GetRequestBody = z.infer<typeof getSchema>;
+export type CreateRequestBody = z.infer<typeof createSchema>;
+export type DeleteRequestBody = z.infer<typeof deleteSchema>;
+export type RestoreRequestBody = z.infer<typeof restoreSchema>;
+export type UpdateRequestBody = z.infer<typeof updateSchema>;
+export type ListRequestBody = z.infer<typeof listSchema>;
 
 // Response types
 export interface GetResponseData {

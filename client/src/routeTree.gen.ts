@@ -14,7 +14,10 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
-import { Route as AdminDocumentsIndexRouteImport } from './routes/admin/documents/index'
+import { Route as AdminLogsRouteImport } from './routes/admin/logs'
+import { Route as AdminRagDocumentsIndexRouteImport } from './routes/admin/rag-documents/index'
+import { Route as AdminAccountsIndexRouteImport } from './routes/admin/accounts/index'
+import { Route as AdminAccountsRolesRouteImport } from './routes/admin/accounts/roles'
 
 const ChatRoute = ChatRouteImport.update({
   id: '/chat',
@@ -41,9 +44,24 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminDocumentsIndexRoute = AdminDocumentsIndexRouteImport.update({
-  id: '/admin/documents/',
-  path: '/admin/documents/',
+const AdminLogsRoute = AdminLogsRouteImport.update({
+  id: '/admin/logs',
+  path: '/admin/logs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRagDocumentsIndexRoute = AdminRagDocumentsIndexRouteImport.update({
+  id: '/admin/rag-documents/',
+  path: '/admin/rag-documents/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAccountsIndexRoute = AdminAccountsIndexRouteImport.update({
+  id: '/admin/accounts/',
+  path: '/admin/accounts/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAccountsRolesRoute = AdminAccountsRolesRouteImport.update({
+  id: '/admin/accounts/roles',
+  path: '/admin/accounts/roles',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -51,26 +69,35 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/chat': typeof ChatRoute
+  '/admin/logs': typeof AdminLogsRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin': typeof AdminIndexRoute
-  '/admin/documents': typeof AdminDocumentsIndexRoute
+  '/admin/accounts/roles': typeof AdminAccountsRolesRoute
+  '/admin/accounts': typeof AdminAccountsIndexRoute
+  '/admin/rag-documents': typeof AdminRagDocumentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/chat': typeof ChatRoute
+  '/admin/logs': typeof AdminLogsRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin': typeof AdminIndexRoute
-  '/admin/documents': typeof AdminDocumentsIndexRoute
+  '/admin/accounts/roles': typeof AdminAccountsRolesRoute
+  '/admin/accounts': typeof AdminAccountsIndexRoute
+  '/admin/rag-documents': typeof AdminRagDocumentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/chat': typeof ChatRoute
+  '/admin/logs': typeof AdminLogsRoute
   '/auth/login': typeof AuthLoginRoute
   '/admin/': typeof AdminIndexRoute
-  '/admin/documents/': typeof AdminDocumentsIndexRoute
+  '/admin/accounts/roles': typeof AdminAccountsRolesRoute
+  '/admin/accounts/': typeof AdminAccountsIndexRoute
+  '/admin/rag-documents/': typeof AdminRagDocumentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -78,28 +105,46 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/chat'
+    | '/admin/logs'
     | '/auth/login'
     | '/admin'
-    | '/admin/documents'
+    | '/admin/accounts/roles'
+    | '/admin/accounts'
+    | '/admin/rag-documents'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/chat' | '/auth/login' | '/admin' | '/admin/documents'
+  to:
+    | '/'
+    | '/about'
+    | '/chat'
+    | '/admin/logs'
+    | '/auth/login'
+    | '/admin'
+    | '/admin/accounts/roles'
+    | '/admin/accounts'
+    | '/admin/rag-documents'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/chat'
+    | '/admin/logs'
     | '/auth/login'
     | '/admin/'
-    | '/admin/documents/'
+    | '/admin/accounts/roles'
+    | '/admin/accounts/'
+    | '/admin/rag-documents/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ChatRoute: typeof ChatRoute
+  AdminLogsRoute: typeof AdminLogsRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AdminIndexRoute: typeof AdminIndexRoute
-  AdminDocumentsIndexRoute: typeof AdminDocumentsIndexRoute
+  AdminAccountsRolesRoute: typeof AdminAccountsRolesRoute
+  AdminAccountsIndexRoute: typeof AdminAccountsIndexRoute
+  AdminRagDocumentsIndexRoute: typeof AdminRagDocumentsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -139,11 +184,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/documents/': {
-      id: '/admin/documents/'
-      path: '/admin/documents'
-      fullPath: '/admin/documents'
-      preLoaderRoute: typeof AdminDocumentsIndexRouteImport
+    '/admin/logs': {
+      id: '/admin/logs'
+      path: '/admin/logs'
+      fullPath: '/admin/logs'
+      preLoaderRoute: typeof AdminLogsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/rag-documents/': {
+      id: '/admin/rag-documents/'
+      path: '/admin/rag-documents'
+      fullPath: '/admin/rag-documents'
+      preLoaderRoute: typeof AdminRagDocumentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/accounts/': {
+      id: '/admin/accounts/'
+      path: '/admin/accounts'
+      fullPath: '/admin/accounts'
+      preLoaderRoute: typeof AdminAccountsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/accounts/roles': {
+      id: '/admin/accounts/roles'
+      path: '/admin/accounts/roles'
+      fullPath: '/admin/accounts/roles'
+      preLoaderRoute: typeof AdminAccountsRolesRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -153,9 +219,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ChatRoute: ChatRoute,
+  AdminLogsRoute: AdminLogsRoute,
   AuthLoginRoute: AuthLoginRoute,
   AdminIndexRoute: AdminIndexRoute,
-  AdminDocumentsIndexRoute: AdminDocumentsIndexRoute,
+  AdminAccountsRolesRoute: AdminAccountsRolesRoute,
+  AdminAccountsIndexRoute: AdminAccountsIndexRoute,
+  AdminRagDocumentsIndexRoute: AdminRagDocumentsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
