@@ -6,7 +6,10 @@ import { performance } from "perf_hooks";
 import LoggingService from "../../logging";
 import ChromaService from "../../chroma";
 
-export const RAG_DOC_CHUNKS_COLLECTION = "rag-doc-chunks";
+import OllamaEmbeddingService from "../../ollama/embed";
+import { ChromaClient, Collection } from "chromadb";
+
+export const RAG_DOC_CHUNKS_COLLECTION = "rag-documents";
 
 export type CreateRagDocChunkParameters = {
   chunkId: string; // deterministic: `${docId}:${chunkIndex}`
@@ -43,12 +46,20 @@ export async function createRagDocChunk(
 ): Promise<void> {
   const startTime = performance.now();
 
-  const chromaClient = ChromaService.getInstance().getClient();
-  const collection = await chromaClient.getOrCreateCollection({
-    name: RAG_DOC_CHUNKS_COLLECTION,
-    metadata: {
-      description: "RAG document chunks for university knowledge base",
+  const client = new ChromaClient({
+    host: process.env.CHROMA_DB_HOST || "localhost",
+    port: process.env.CHROMA_DB_PORT
+      ? parseInt(process.env.CHROMA_DB_PORT)
+      : 8000,
+    ssl: process.env.CHROMA_DB_SSL === "true",
+    fetchOptions: {
+      keepalive: true,
     },
+  });
+
+  const collection = await client.getOrCreateCollection({
+    name: "rag-documents",
+    embeddingFunction: OllamaEmbeddingService.getInstance().getEmbedder(),
   });
 
   const {
@@ -63,7 +74,6 @@ export async function createRagDocChunk(
     deliveryModes,
     effectiveFrom,
     effectiveUntil,
-    archived,
     warnings,
     tags,
     publicUrl,
@@ -73,22 +83,22 @@ export async function createRagDocChunk(
     ids: [chunkId],
     embeddings: [embedding],
     documents: [content],
-    metadatas: [
-      {
-        docId,
-        chunkIndex,
-        category,
-        authorityLevel,
-        campuses: campuses.join(","),
-        deliveryModes: deliveryModes.join(","),
-        effectiveFrom: effectiveFrom.toISOString(),
-        effectiveUntil: effectiveUntil ? effectiveUntil.toISOString() : null,
-        archived,
-        warnings: warnings.join("~"),
-        tags: tags.join(","),
-        publicUrl,
-      },
-    ],
+    // metadatas: [
+    //   {
+    //     docId,
+    //     chunkIndex,
+    //     category,
+    //     authorityLevel,
+    //     campuses: campuses.join(","),
+    //     deliveryModes: deliveryModes.join(","),
+    //     effectiveFrom: effectiveFrom.toISOString(),
+    //     effectiveUntil: effectiveUntil ? effectiveUntil.toISOString() : null,
+    //     archived,
+    //     warnings: warnings.join("~"),
+    //     tags: tags.join(","),
+    //     publicUrl,
+    //   },
+    // ],
   });
 
   LoggingService.log({

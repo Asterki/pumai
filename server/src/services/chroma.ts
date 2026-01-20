@@ -8,8 +8,13 @@ class ChromaService {
   private readonly docsDir: string = path.resolve("./data/rag-documents");
   private client: ChromaClient = new ChromaClient({
     host: process.env.CHROMA_DB_HOST || "localhost",
-    port: process.env.CHROMA_DB_PORT ? parseInt(process.env.CHROMA_DB_PORT) : 8000,
+    port: process.env.CHROMA_DB_PORT
+      ? parseInt(process.env.CHROMA_DB_PORT)
+      : 8000,
     ssl: process.env.CHROMA_DB_SSL === "true",
+    fetchOptions: {
+      keepalive: true,
+    },
   });
   private collection: Collection | null = null;
 
@@ -21,7 +26,7 @@ class ChromaService {
   }
 
   constructor() {
-    this.loadFilesToCollection();
+    this.connect();
   }
 
   public getClient() {
@@ -36,32 +41,42 @@ class ChromaService {
     return this.client.deleteCollection({ name: "rag-documents" });
   }
 
-  private async loadFilesToCollection() {
-    await this.deleteCollection();
+  private async connect() {
+    console.log("[ChromaDB] Connecting to ChromaDB server...");
+    // Initialize the Collection
     this.collection = await this.client.getOrCreateCollection({
       name: "rag-documents",
       embeddingFunction: OllamaEmbeddingService.getInstance().getEmbedder(),
     });
+    console.log("[ChromaDB] Connected to ChromaDB server.");
 
-    for (const file of fs.readdirSync(this.docsDir)) {
-      if (!file.endsWith(".txt")) continue;
-      const filePath = path.join(this.docsDir, file);
-      const text = fs.readFileSync(filePath, "utf8");
+    // Uncomment the following code to embed documents from the docsDir
 
-      // Create an embedding for the file content
-      const embedding =
-        await OllamaEmbeddingService.getInstance().embedText(text);
-
-      await this.collection.add({
-        ids: [file],
-        embeddings: [embedding],
-        documents: [text],
-      });
-    }
-
-    console.log(
-      "[ChromaDB] All documents have been embedded and added to the collection.",
-    );
+    // await this.deleteCollection();
+    // this.collection = await this.client.getOrCreateCollection({
+    //   name: "rag-documents",
+    //   embeddingFunction: OllamaEmbeddingService.getInstance().getEmbedder(),
+    // });
+    //
+    // for (const file of fs.readdirSync(this.docsDir)) {
+    //   if (!file.endsWith(".txt")) continue;
+    //   const filePath = path.join(this.docsDir, file);
+    //   const text = fs.readFileSync(filePath, "utf8");
+    //
+    //   // Create an embedding for the file content
+    //   const embedding =
+    //     await OllamaEmbeddingService.getInstance().embedText(text);
+    //
+    //   await this.collection.add({
+    //     ids: [file],
+    //     embeddings: [embedding],
+    //     documents: [text],
+    //   });
+    // }
+    //
+    // console.log(
+    //   "[ChromaDB] All documents have been embedded and added to the collection.",
+    // );
   }
 }
 

@@ -12,6 +12,8 @@ import OllamaEmbedService from "../../services/ollama/embed";
 
 import { APIError } from "../../errors/api";
 
+import { v4 as uuidv4 } from "uuid";
+
 const handler = async (
   req: Request<{}, {}, RagDocumentsAPITypes.CreateRequestBody>,
   res: Response<RagDocumentsAPITypes.CreateResponseData>,
@@ -33,13 +35,14 @@ const handler = async (
     session.startTransaction();
 
     const embedding = await OllamaEmbedService.getInstance().embedText(content);
+    console.log(embedding);
 
     // Pass session explicitly to service
     createRagDocChunkWithRetry(
       {
         warnings: [],
         archived: false,
-        chunkId: "", // Will be generated in services
+        chunkId: uuidv4(), // Will be generated in services
         chunkIndex: 0, // Single chunk document
         deliveryModes: [],
         docId: "", // Will be generated in services
@@ -48,7 +51,7 @@ const handler = async (
         category,
         authorityLevel,
         campuses,
-        effectiveFrom,
+        effectiveFrom: new Date(effectiveFrom),
         effectiveUntil: effectiveUntil || null,
         tags: tags || [],
         embedding,

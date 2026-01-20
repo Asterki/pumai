@@ -13,7 +13,7 @@ const axiosClient = axios.create({
   withCredentials: true, // Always include credentials
 });
 
-export const categoriesApi = {
+export const ragDocumentApi = {
   async create(
     data: RAGDocumentsAPITypes.CreateRequestBody,
   ): Promise<RAGDocumentsAPITypes.CreateResponseData> {
@@ -105,4 +105,4 @@ export const categoriesApi = {
   },
 };
 
-export default categoriesApi;
+export default ragDocumentApi;
