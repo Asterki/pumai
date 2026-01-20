@@ -43,32 +43,80 @@ export function RagDocumentsTable({
         dataSource={ragDocuments.ragDocuments}
         columns={[
           {
-            title: t("name"),
+            title: t("docName"),
             key: "name",
             dataIndex: "name",
             render: (_: any, record: ListRAGDocument) => (
               <span>
                 {record.name}{" "}
-                {record.deleted ? <Tag color="red">{t("deleted")}</Tag> : ""}
+                {record.deleted && <Tag color="red">{t("deleted")}</Tag>}
               </span>
             ),
           },
           {
-            title: t("level"),
-            key: "level",
-            dataIndex: "level",
+            title: t("category"),
+            key: "category",
+            dataIndex: "category",
+            render: (value: string) => <Tag>{value}</Tag>,
           },
           {
-            title: t("totalPermissions"),
-            key: "totalPermissions",
-            dataIndex: "totalPermissions",
+            title: t("authorityLevel"),
+            key: "authorityLevel",
+            dataIndex: "authorityLevel",
+          },
+          {
+            title: t("campuses"),
+            key: "campuses",
+            dataIndex: "campuses",
+            render: (campuses: string[]) =>
+              campuses.map((c) => (
+                <Tag key={c} color={c === "GLOBAL" ? "blue" : "default"}>
+                  {c}
+                </Tag>
+              )),
+          },
+          {
+            title: t("effectiveFrom"),
+            key: "effectiveFrom",
+            render: (_: any, record: ListRAGDocument) =>
+              new Date(record.effective.from).toLocaleDateString(),
+          },
+          {
+            title: t("effectiveUntil"),
+            key: "effectiveUntil",
+            render: (_: any, record: ListRAGDocument) =>
+              record.effective.until
+                ? new Date(record.effective.until).toLocaleDateString()
+                : "—",
+          },
+          {
+            title: t("tags"),
+            key: "tags",
+            dataIndex: "tags",
+            render: (tags: string[]) =>
+              tags.map((tag) => <Tag key={tag}>{tag}</Tag>),
           },
           {
             title: t("createdAt"),
             key: "createdAt",
-            render: (_: any, record: ListRAGDocument) => (
-              <p>{new Date(record.createdAt).toLocaleDateString()}</p>
-            ),
+            dataIndex: "createdAt",
+            render: (value: Date) => new Date(value).toLocaleDateString(),
+          },
+          {
+            title: t("status"),
+            key: "status",
+            render: (_: any, record: ListRAGDocument) => {
+              const now = new Date();
+              const expired =
+                record.effective.until &&
+                new Date(record.effective.until) < now;
+
+              if (record.deleted || expired) {
+                return <Tag color="red">{t("deleted")}</Tag>;
+              }
+
+              return <Tag color="green">{t("active")}</Tag>;
+            },
           },
           {
             title: t("actions"),
@@ -108,20 +156,17 @@ export function RagDocumentsTable({
                       key: "restore",
                       label: t("actionButtons.restore"),
                       icon: <FaTrashRestore />,
-                      disabled: !canRestore || !record.deleted,
-                      className: record.deleted ? "hidden" : "",
+                      disabled: !canRestore,
                       onClick: () => onRestore(record),
                     },
                   ];
 
               return (
-                <Space>
-                  <Dropdown menu={{ items: menuItems }} trigger={["click"]}>
-                    <Button icon={<FaEllipsisH />}>
-                      {t("actionButtons.trigger")}
-                    </Button>
-                  </Dropdown>
-                </Space>
+                <Dropdown menu={{ items: menuItems }} trigger={["click"]}>
+                  <Button icon={<FaEllipsisH />}>
+                    {t("actionButtons.trigger")}
+                  </Button>
+                </Dropdown>
               );
             },
           },

@@ -179,6 +179,72 @@ const translation = {
         },
       },
     },
+    "rag-documents": {
+      components: {
+        table: {
+          docName: "Documento",
+          category: "Categoría",
+          authorityLevel: "Nivel de Autoridad",
+          campuses: "Campuses",
+          effectiveFrom: "Efectivo desde",
+          effectiveUntil: "Efectivo hasta",
+          tags: "Tags",
+          createdAt: "Creado el",
+          status: "Estado",
+          deleted: "Eliminado",
+          active: "activo",
+
+          actions: "Acciones",
+
+          actionButtons: {
+            trigger: "Ver acciones",
+            update: "Editar",
+            delete: "Eliminar",
+            restore: "Restaurar",
+          },
+
+          total: "Mostrando {{range}} de {{total}} documentos",
+        },
+
+        createModal: {
+          title: "Subir documento",
+
+          fields: {
+            file: "Archivo",
+            fileHint: "PDF, DOCX o imagen escaneada",
+
+            name: "Nombre del documento",
+            namePlaceholder: "Ej. Reglamento de inscripción",
+
+            category: "Categoría",
+
+            authorityLevel: "Nivel de autoridad",
+            authorityLevelHint: "Mayor valor = mayor prioridad",
+
+            campuses: "Campus aplicables",
+
+            effectiveFrom: "Válido desde",
+            effectiveUntil: "Válido hasta",
+
+            tags: "Etiquetas",
+            tagsPlaceholder: "Ej. inscripción, pagos, biblioteca",
+          },
+        },
+      },
+      hooks: {
+        useCreateModal: {
+          messages: {
+            success: "Documento subido correctamente",
+            fileRequired: "El archivo es obligatorio",
+            nameRequired: "El nombre del documento es obligatorio",
+            categoryRequired: "La categoría es obligatoria",
+            authorityLevelRequired: "El nivel de autoridad es obligatorio",
+            campusesRequired: "Debe seleccionar al menos un campus",
+            effectiveFromRequired: "La fecha de inicio es obligatoria",
+          },
+        },
+      },
+    },
   },
 
   layouts: {

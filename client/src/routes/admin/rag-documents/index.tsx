@@ -40,8 +40,18 @@ function RouteComponent() {
   });
   const { t: tCommon } = useTranslation(["common"]);
 
+  // List
   const { ragDocuments, fetchRagDocuments, ragDocumentsListState } =
     RAGDocumentsFeature.hooks.useRagDocumentsList({});
+
+  // Create
+  const {
+    state: createRagDocumentState,
+    setState: setCreateRagDocumentState,
+    openModal: openCreateRagDocumentModal,
+    closeModal: closeCreateRagDocumentModal,
+    createDocument: createRagDocument,
+  } = RAGDocumentsFeature.hooks.useCreateRagDocumentModal({});
 
   useEffect(() => {
     if (!account) return; // Admin layout will handle this
@@ -61,6 +71,18 @@ function RouteComponent() {
 
   return (
     <AdminPageLayout selectedPage="rag-documents">
+      <RAGDocumentsFeature.components.CreateRagDocumentModal
+        setState={setCreateRagDocumentState}
+        state={createRagDocumentState}
+        onClose={closeCreateRagDocumentModal}
+        onCreate={async () => {
+          // const success = await createRagDocument();
+          // if (success) {
+          // //   fetchRagDocuments({ count: 50, page: 0 });
+          // // }
+        }}
+      />
+
       <Title className="flex items-center gap-2">
         <FaFile />
         {tPage("title")}
@@ -80,7 +102,7 @@ function RouteComponent() {
             )
           }
           onClick={() => {
-            // openCreateAccountRoleModal();
+            openCreateRagDocumentModal();
           }}
           icon={<FaPlus />}
         >
@@ -111,7 +133,7 @@ function RouteComponent() {
         />
       </div>
 
-      {/* Roles List */}
+      {/* Documents List */}
       {account && (
         <RAGDocumentsFeature.components.RagDocumentsTable
           fetchRagDocuments={fetchRagDocuments}

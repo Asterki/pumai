@@ -76,8 +76,8 @@ function RouteComponent() {
     {
       key: "documents",
       link: "/admin/rag-documents",
-      label: tpage("items.documents.title"),
-      description: tpage("items.documents.description"),
+      label: tpage("items.rag-documents.title"),
+      description: tpage("items.rag-documents.description"),
       icon: <FaFile className="text-6xl" />, // Better for dashboards
     },
 

@@ -1,10 +1,36 @@
-export interface IRAGDocument {
-  _id: string;
+import { IMetadata } from "./metadata";
 
-  content: string;
-  embedding: number[];
-  metadata: {
-    source: string;
-    [key: string]: any;
+import {
+  DocumentCategory,
+  DeliveryMode,
+  CampusCode,
+  SourceType,
+} from "./index";
+
+export interface IRAGDocument {
+  _id: string; // database internal ID
+  docId: string; // UUID or slug
+  title: string;
+  category: DocumentCategory;
+
+  authorityLevel: number; // higher = stronger authority
+  sourceType: SourceType;
+
+  campuses: CampusCode[]; // ["GLOBAL"] or specific campuses
+  deliveryModes: DeliveryMode[];
+
+  effectiveFrom: Date;
+  effectiveUntil: Date | null;
+  archived: boolean;
+
+  warnings: {
+    legal?: string;
+    timeSensitive?: string;
+    campusSpecific?: string;
   };
+
+  summary: string; // auto-generated
+  tags: string[];
+
+  metadata: IMetadata;
 }

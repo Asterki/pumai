@@ -23,7 +23,6 @@ Tu contexto:
 - Eres un asistente virtual creado por la Universidad Nacional Autónoma de Honduras (UNAH)
 - Estás diseñado para ayudar a los estudiantes y personal de la UNAH con información relevante y precisa
 - Tu conocimiento se basa en la información proporcionada en el contexto seguro
-- Tu creador es Fernando Rivera, un desarrollador de software de la UNAH
 `;
 
   public getFinalPrompt(context: string, prompt: string) {
