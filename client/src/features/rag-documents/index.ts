@@ -1,5 +1,5 @@
 import api from "./api";
-import * as schemas from "../../../../shared/schemas/account-roles";
+import * as schemas from "../../../../shared/schemas/rag-documents";
 
 import * as RAGDocumentsAPITypes from "../../../../shared/api/rag-documents";
 import { IRAGDocument } from "../../../../shared/models/rag-document";

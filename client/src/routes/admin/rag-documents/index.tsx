@@ -76,10 +76,7 @@ function RouteComponent() {
         state={createRagDocumentState}
         onClose={closeCreateRagDocumentModal}
         onCreate={async () => {
-          // const success = await createRagDocument();
-          // if (success) {
-          // //   fetchRagDocuments({ count: 50, page: 0 });
-          // // }
+          await createRagDocument();
         }}
       />
 

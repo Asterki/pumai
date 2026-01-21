@@ -2,25 +2,13 @@ import { useCallback, useState } from "react";
 import { App } from "antd";
 import { useTranslation } from "react-i18next";
 
-import RagDocumentsFeature from "../";
+import RagDocumentsFeature, { RAGDocumentsAPITypes } from "../";
 
-export type CreateRagDocumentModalState = {
-  isOpen: boolean;
-  loading: boolean;
-
-  file?: File;
-
-  name: string;
-  category?: string;
-  authorityLevel?: number;
-
-  campuses: string[];
-
-  effectiveFrom?: Date;
-  effectiveUntil?: Date | null;
-
-  tags: string[];
-};
+export type CreateRagDocumentModalState =
+  RAGDocumentsAPITypes.CreateRequestBody & {
+    isOpen: boolean;
+    loading: boolean;
+  };
 
 export function useCreateRagDocumentModal({
   onSuccess,
@@ -36,8 +24,15 @@ export function useCreateRagDocumentModal({
   const defaultState: CreateRagDocumentModalState = {
     isOpen: false,
     loading: false,
+    type: "text",
+    content: "",
+    authorityLevel: 1,
+    campuses: ["GLOBAL"],
+    category: "student_life",
+    description: "",
+    effectiveFrom: new Date().toISOString(),
     name: "",
-    campuses: [],
+    effectiveUntil: undefined,
     tags: [],
   };
 
@@ -46,47 +41,16 @@ export function useCreateRagDocumentModal({
   const createDocument = useCallback(async () => {
     if (state.loading) return;
 
-    // Minimal client-side validation
-    if (!state.file) {
-      message.warning(t("messages.fileRequired"));
-      return;
-    }
-    if (!state.name) {
-      message.warning(t("messages.nameRequired"));
-      return;
-    }
-    if (!state.category) {
-      message.warning(t("messages.categoryRequired"));
-      return;
-    }
-    if (state.authorityLevel === undefined) {
-      message.warning(t("messages.authorityLevelRequired"));
-      return;
-    }
-    if (!state.campuses.length) {
-      message.warning(t("messages.campusesRequired"));
-      return;
-    }
-    if (!state.effectiveFrom) {
-      message.warning(t("messages.effectiveFromRequired"));
-      return;
+    const parsedData = RagDocumentsFeature.schemas.createSchema.safeParse(state);
+    if (!parsedData.success) {
+      parsedData.error.issues.forEach((issue) => {
+        message.warning(t(`messages:${issue.message}`));
+      });
+      return; // stop if validation fails
     }
 
     setState((prev) => ({ ...prev, loading: true }));
-
-    const formData = new FormData();
-    formData.append("file", state.file);
-    formData.append("name", state.name);
-    formData.append("category", state.category);
-    formData.append("authorityLevel", String(state.authorityLevel));
-    formData.append("campuses", JSON.stringify(state.campuses));
-    formData.append("effectiveFrom", state.effectiveFrom.toISOString());
-    if (state.effectiveUntil) {
-      formData.append("effectiveUntil", state.effectiveUntil.toISOString());
-    }
-    formData.append("tags", JSON.stringify(state.tags));
-
-    const result = await RagDocumentsFeature.api.create(formData);
+    const result = await RagDocumentsFeature.api.create(parsedData.data);
 
     if (result.status === "success") {
       message.success(t("messages.success"));

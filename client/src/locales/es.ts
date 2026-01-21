@@ -210,7 +210,12 @@ const translation = {
           title: "Subir documento",
 
           fields: {
+            select: "Seleccionar Tipo de Documento",
+            selectPlaceholder: "Seleccione el tipo de documento",
             file: "Archivo",
+            text: "Texto",
+            chunk: "Fragmento de texto",
+
             fileHint: "PDF, DOCX o imagen escaneada",
 
             name: "Nombre del documento",

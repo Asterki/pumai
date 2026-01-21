@@ -11,7 +11,8 @@ import { FaUpload } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 const { Dragger } = Upload;
-const { RangePicker } = DatePicker;
+
+import type { CreateRagDocumentModalState } from "../hooks/useCreateRagDocument";
 
 export function CreateRagDocumentModal({
   state,
@@ -19,8 +20,8 @@ export function CreateRagDocumentModal({
   onClose,
   onCreate,
 }: {
-  state: any;
-  setState: React.Dispatch<React.SetStateAction<any>>;
+  state: CreateRagDocumentModalState;
+  setState: React.Dispatch<React.SetStateAction<CreateRagDocumentModalState>>;
   onClose: () => void;
   onCreate: () => void;
 }) {
@@ -40,24 +41,50 @@ export function CreateRagDocumentModal({
       okButtonProps={{
         loading: state.loading,
         icon: <FaUpload />,
-        disabled: state.loading || !state.file,
+        disabled: state.loading || !state.content,
       }}
     >
       <Form layout="vertical">
-        <Form.Item label={t("fields.file")} required>
-          <Dragger
-            beforeUpload={(file) => {
-              setState((prev: any) => ({ ...prev, file }));
-              return false;
-            }}
-            maxCount={1}
-          >
-            <p className="ant-upload-drag-icon">
-              <FaUpload />
-            </p>
-            <p className="ant-upload-text">{t("fields.fileHint")}</p>
-          </Dragger>
+        <Form.Item label={t("fields.select")} required>
+          <Select
+            placeholder={t("fields.selectPlaceholder")}
+            options={[{ label: t("fields.text"), value: "text" }]}
+            onChange={(value) =>
+              setState((prev: any) => ({ ...prev, type: value }))
+            }
+            value={state.type}
+          />
         </Form.Item>
+
+        {state.type === "file" && (
+          <Form.Item label={t("fields.file")} required>
+            <Dragger
+              beforeUpload={(file) => {
+                setState((prev: any) => ({ ...prev, file }));
+                return false;
+              }}
+              maxCount={1}
+            >
+              <p className="ant-upload-drag-icon">
+                <FaUpload />
+              </p>
+              <p className="ant-upload-text">{t("fields.fileHint")}</p>
+            </Dragger>
+          </Form.Item>
+        )}
+
+        {state.type === "text" && (
+          <Form.Item label={t("fields.content")} required>
+            <Input.TextArea
+              rows={6}
+              maxLength={5000}
+              placeholder={t("fields.contentPlaceholder")}
+              onChange={(e) =>
+                setState((prev: any) => ({ ...prev, content: e.target.value }))
+              }
+            />
+          </Form.Item>
+        )}
 
         <Form.Item label={t("fields.name")} required>
           <Input
@@ -65,6 +92,19 @@ export function CreateRagDocumentModal({
             placeholder={t("fields.namePlaceholder")}
             onChange={(e) =>
               setState((prev: any) => ({ ...prev, name: e.target.value }))
+            }
+          />
+        </Form.Item>
+
+        <Form.Item label={t("fields.description")} required>
+          <Input
+            maxLength={150}
+            placeholder={t("fields.descriptionPlaceholder")}
+            onChange={(e) =>
+              setState((prev: any) => ({
+                ...prev,
+                description: e.target.value,
+              }))
             }
           />
         </Form.Item>
@@ -111,6 +151,7 @@ export function CreateRagDocumentModal({
             onChange={(value) =>
               setState((prev: any) => ({ ...prev, campuses: value }))
             }
+            options={[{ label: "GLOBAL", value: "global" }]}
           />
         </Form.Item>
 
@@ -120,7 +161,7 @@ export function CreateRagDocumentModal({
             onChange={(date) =>
               setState((prev: any) => ({
                 ...prev,
-                effectiveFrom: date?.toDate(),
+                effectiveFrom: date?.toISOString(),
               }))
             }
           />
@@ -132,7 +173,7 @@ export function CreateRagDocumentModal({
             onChange={(date) =>
               setState((prev: any) => ({
                 ...prev,
-                effectiveUntil: date ? date.toDate() : null,
+                effectiveUntil: date ? date.toISOString() : null,
               }))
             }
           />

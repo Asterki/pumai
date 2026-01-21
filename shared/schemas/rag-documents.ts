@@ -1,43 +1,50 @@
 import { z } from "zod";
-import { zObjectId } from ".";
+import { zObjectId, isoDateString } from ".";
 
 // Create
-const createSchema = z.object({
-  // name: z.string().min(1, "name-too-short").max(150, "name-too-long"),
-  content: z.string().min(1, "content-too-short"),
+const createSchema = z
+  .object({
+    name: z.string().min(1, "name-too-short").max(150, "name-too-long"),
+    content: z.string().min(1, "content-too-short").optional(),
+    type: z.enum(["file", "text"], "invalid-type"),
 
-  description: z
-    .string()
-    .min(1, "description-too-short")
-    .max(5000, "description-too-long"),
+    description: z
+      .string()
+      .min(1, "description-too-short")
+      .max(5000, "description-too-long"),
 
-  category: z.enum(
-    [
-      "regulation",
-      "administrative",
-      "campus_service",
-      "student_life",
-      "support",
-    ],
-    "invalid-category",
-  ),
+    category: z.enum(
+      [
+        "regulation",
+        "administrative",
+        "campus_service",
+        "student_life",
+        "support",
+      ],
+      "invalid-category",
+    ),
 
-  authorityLevel: z
-    .number()
-    .int("authority-level-not-integer")
-    .min(0, "authority-level-too-low")
-    .max(1000, "authority-level-too-high"),
+    authorityLevel: z
+      .number()
+      .int("authority-level-not-integer")
+      .min(0, "authority-level-too-low")
+      .max(1000, "authority-level-too-high"),
 
-  campuses: z.array(z.string().min(1)).min(1, "campus-required"),
+    campuses: z.array(z.string().min(1)).min(1, "campus-required"),
 
-  effectiveFrom: z.string(),
+    effectiveFrom: isoDateString,
+    effectiveUntil: isoDateString.optional(),
 
-  effectiveUntil: z.date({}).nullable().optional(),
+    tags: z
+      .array(z.string().min(1).max(50))
+      .max(20, "too-many-tags")
+      .optional(),
 
-  tags: z.array(z.string().min(1).max(50)).max(20, "too-many-tags").optional(),
-
-  // File is validated separately (multipart/form-data)
-});
+    // File is validated separately (multipart/form-data)
+  })
+  .refine((data) => (data.type === "text" ? !!data.content : true), {
+    message: "content-required-for-text-type",
+  });
 // .refine(
 //   (data) => !data.effectiveUntil || data.effectiveUntil >= data.effectiveFrom,
 //   {
