@@ -34,7 +34,9 @@ const handler = async (
   try {
     session.startTransaction();
 
-    const embedding = await OllamaEmbedService.getInstance().embedText(content);
+    const embedding = await OllamaEmbedService.getInstance().embedText(
+      content as string,
+    );
     console.log(embedding);
 
     // Pass session explicitly to service
@@ -47,12 +49,12 @@ const handler = async (
         deliveryModes: [],
         docId: "", // Will be generated in services
         publicUrl: "",
-        content,
+        content: content ?? "",
         category,
         authorityLevel,
         campuses,
         effectiveFrom: new Date(effectiveFrom),
-        effectiveUntil: effectiveUntil || null,
+        effectiveUntil: effectiveUntil ? new Date(effectiveUntil) : null,
         tags: tags || [],
         embedding,
       },
