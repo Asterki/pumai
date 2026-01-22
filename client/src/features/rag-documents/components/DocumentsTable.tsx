@@ -48,7 +48,7 @@ export function RagDocumentsTable({
             dataIndex: "name",
             render: (_: any, record: ListRAGDocument) => (
               <span>
-                {record.name}{" "}
+                {record.title}{" "}
                 {record.deleted && <Tag color="red">{t("deleted")}</Tag>}
               </span>
             ),

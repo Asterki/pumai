@@ -116,7 +116,27 @@ const listSchema = z.object({
     })
     .optional(),
   fields: z
-    .array(z.enum(["_id", "metadata", "name", "description"], "invalid-field"))
+    .array(
+      z.enum(
+        [
+          "_id",
+          "title",
+          "category",
+          "authorityLevel",
+          "sourceType",
+          "campuses",
+          "deliveryModes",
+          "effectiveFrom",
+          "effectiveUntil",
+          "archived",
+          "warnings",
+          "summary",
+          "tags",
+          "metadata",
+        ],
+        "invalid-field",
+      ),
+    )
     .optional(),
   populate: z.array(z.literal("metadata"), "invalid-populate-path").optional(),
 });

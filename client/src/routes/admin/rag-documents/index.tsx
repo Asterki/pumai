@@ -51,7 +51,11 @@ function RouteComponent() {
     openModal: openCreateRagDocumentModal,
     closeModal: closeCreateRagDocumentModal,
     createDocument: createRagDocument,
-  } = RAGDocumentsFeature.hooks.useCreateRagDocumentModal({});
+  } = RAGDocumentsFeature.hooks.useCreateRagDocumentModal({
+    onSuccess: async () => {
+      await fetchRagDocuments({ count: 50, page: 0 });
+    },
+  });
 
   useEffect(() => {
     if (!account) return; // Admin layout will handle this

@@ -116,7 +116,6 @@ export async function createRAGDocument(
       duration: Number((performance.now() - startTime).toFixed(3)),
       details: {
         ragDocumentId: ragDocument._id.toString(),
-        name,
       },
       _references: {
         ragDocumentId: "RAGDocument",

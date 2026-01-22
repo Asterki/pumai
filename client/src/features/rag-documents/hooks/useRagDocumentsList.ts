@@ -27,7 +27,22 @@ export function useRagDocumentsList({
     RAGDocumentsAPITypes.ListRequestBody & { loading: boolean }
   >({
     loading: true,
-    fields: ["metadata", "_id"],
+    fields: [
+      "_id",
+      "title",
+      "category",
+      "authorityLevel",
+      "sourceType",
+      "campuses",
+      "deliveryModes",
+      "effectiveFrom",
+      "effectiveUntil",
+      "archived",
+      "warnings",
+      "summary",
+      "tags",
+      "metadata",
+    ],
     count: 50,
     page: 0,
   });
@@ -67,8 +82,12 @@ export function useRagDocumentsList({
 
         setRagDocuments({
           ragDocuments: result.ragDocuments!.map((doc) => ({
+            ...doc,
+            effective: {
+              from: doc.effectiveFrom,
+              until: doc.effectiveUntil,
+            },
             _id: doc._id.toString(),
-            name: "",
             createdAt: doc.metadata
               ? new Date(doc.metadata.createdAt ?? Date.now())
               : new Date(),

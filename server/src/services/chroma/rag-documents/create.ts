@@ -7,11 +7,7 @@ import LoggingService from "../../logging";
 import ChromaService from "../../chroma";
 
 import OllamaEmbeddingService from "../../ollama/embed";
-import {
-  CampusCode,
-  DeliveryMode,
-  DocumentCategory,
-} from "../../../../../shared/models";
+import { DocumentCategory } from "../../../../../shared/models";
 
 export const RAG_DOC_CHUNKS_COLLECTION = "rag-documents";
 

@@ -7,7 +7,7 @@ import { CampusCode, DocumentCategory } from "../../../../shared/models";
 
 interface ListRAGDocument {
   _id: string;
-  name: string;
+  title: string;
   category: DocumentCategory;
   authorityLevel: number;
   campuses: CampusCode[];
