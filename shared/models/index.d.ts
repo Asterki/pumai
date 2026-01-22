@@ -26,4 +26,3 @@ export type DocumentCategory =
   | "support";
 
 export type SourceType = "official" | "approved_student";
-v;

@@ -2,17 +2,16 @@ import mongoose from "mongoose";
 import { Request, Response, NextFunction } from "express";
 
 import * as RagDocumentsAPITypes from "../../../../shared/api/rag-documents";
-import { IRAGDocument } from "../../../../shared/models/rag-document";
+import { IAccount } from "../../../../shared/models/account";
 
 import LoggingService from "../../services/logging";
-import EmailService from "../../services/email";
 
 import { createRagDocChunkWithRetry } from "../../services/chroma/rag-documents/create";
+import { createRAGDocumentWithRetry } from "src/services/rag-documents/create";
+
 import OllamaEmbedService from "../../services/ollama/embed";
 
 import { APIError } from "../../errors/api";
-
-import { v4 as uuidv4 } from "uuid";
 
 const handler = async (
   req: Request<{}, {}, RagDocumentsAPITypes.CreateRequestBody>,
@@ -20,19 +19,22 @@ const handler = async (
   _next: NextFunction,
 ) => {
   const session = await mongoose.startSession();
+  const adminAccount = req.user as IAccount;
+
   const {
+    sourceType,
+    deliveryModes,
+    title,
     campuses,
     content,
-    effectiveFrom,
-    category,
     authorityLevel,
-    tags,
+    warnings,
+    summary,
+    category,
+    effectiveFrom,
     effectiveUntil,
-    name,
-    type,
-    description,
+    tags,
   } = req.body;
-  const adminAccount = req.user as IRAGDocument;
 
   try {
     session.startTransaction();
@@ -41,27 +43,44 @@ const handler = async (
       content as string,
     );
 
-    // Simulating storing document
-
-    createRagDocChunkWithRetry(
+    const ragDocument = await createRAGDocumentWithRetry(
       {
-        name,
-        type,
-        description,
-        warnings: [],
+        sourceType,
         archived: false,
-        chunkId: uuidv4(), // Will be generated in services
-        chunkIndex: 0, // Single chunk document
-        deliveryModes: [],
-        docId: "", // Will be generated in services
-        publicUrl: "",
-        content: content ?? "",
-        category,
-        authorityLevel,
+        deliveryModes,
+        title,
         campuses,
+        authorityLevel,
+        warnings: warnings || {},
+        summary,
+        category,
         effectiveFrom: new Date(effectiveFrom),
         effectiveUntil: effectiveUntil ? new Date(effectiveUntil) : null,
         tags: tags || [],
+      },
+      {
+        session,
+        traceId: req.traceId,
+        adminAccount,
+      },
+    );
+
+    // TOOD: Separate content into separate chunks if needed
+    createRagDocChunkWithRetry(
+      {
+        archived: false,
+        docId: ragDocument._id,
+        chunkIndex: 0,
+        content: content as string,
+        effectiveFrom: new Date(effectiveFrom).toISOString(),
+        effectiveUntil: effectiveUntil
+          ? new Date(effectiveUntil).toISOString()
+          : "",
+        warnings: JSON.stringify(warnings || {}),
+        deliveryModes: deliveryModes.join(","),
+        campuses: campuses.join(","),
+        authorityLevel,
+        category,
         embedding,
       },
       {

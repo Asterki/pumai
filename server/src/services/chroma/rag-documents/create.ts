@@ -7,37 +7,33 @@ import LoggingService from "../../logging";
 import ChromaService from "../../chroma";
 
 import OllamaEmbeddingService from "../../ollama/embed";
-import { ChromaClient, Collection } from "chromadb";
+import {
+  CampusCode,
+  DeliveryMode,
+  DocumentCategory,
+} from "../../../../../shared/models";
 
 export const RAG_DOC_CHUNKS_COLLECTION = "rag-documents";
 
 export type CreateRagDocChunkParameters = {
-  chunkId: string; // deterministic: `${docId}:${chunkIndex}`
-  embedding: number[];
-
-  name: string;
-  type: string;
-  description: string;
+  chunkIndex: number; // Several chunks for the same document
+  docId: string; // Original document docId
 
   content: string;
 
-  docId: string;
-  chunkIndex: number;
-
-  category: string;
+  category: DocumentCategory;
   authorityLevel: number;
 
-  campuses: string[];
-  deliveryModes: string[];
+  campuses: string; // CampusCode[]
+  deliveryModes: string; // DeliveryMode[]
 
-  effectiveFrom: Date;
-  effectiveUntil: Date | null;
+  effectiveFrom: string; // ISO string
+  effectiveUntil: string; // ISO string or null
   archived: boolean;
 
-  warnings: string[];
-  tags: string[];
+  warnings: string; // JSON stringified
 
-  publicUrl: string; // `/document/{docId}`
+  embedding: number[];
 };
 
 export type CreateRagDocChunkOptions = {
@@ -58,46 +54,33 @@ export async function createRagDocChunk(
   });
 
   const {
-    chunkId,
-    embedding,
-    content,
     docId,
-    chunkIndex,
+    content,
+    archived,
+    effectiveUntil,
+    effectiveFrom,
+    warnings,
     category,
     authorityLevel,
     campuses,
     deliveryModes,
-    effectiveFrom,
-    effectiveUntil,
-    warnings,
-    tags,
-    publicUrl,
-    name,
-    type,
-    description,
+    embedding,
+    chunkIndex,
   } = parameters;
 
   await collection.add({
-    ids: [chunkId],
+    ids: [`${docId}:${chunkIndex}`],
     embeddings: [embedding],
     documents: [content],
     metadatas: [
       {
-        docId,
-        name,
-        type,
-        description,
-        chunkIndex,
-        category,
+        archived,
+        effectiveUntil,
+        effectiveFrom,
+        warnings,
         authorityLevel,
-        campuses: campuses.join(","),
-        deliveryModes: deliveryModes.join(","),
-        effectiveFrom: effectiveFrom.toISOString(),
-        effectiveUntil: effectiveUntil ? effectiveUntil.toISOString() : null,
-        archived: false,
-        warnings: warnings.join("~"),
-        tags: tags.join(","),
-        publicUrl,
+        campuses,
+        deliveryModes,
       },
     ],
   });
@@ -109,7 +92,6 @@ export async function createRagDocChunk(
     message: "RAG document chunk created",
     duration: Number((performance.now() - startTime).toFixed(3)),
     details: {
-      chunkId,
       docId,
       chunkIndex,
       category,

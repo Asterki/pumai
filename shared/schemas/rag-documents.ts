@@ -4,54 +4,83 @@ import { zObjectId, isoDateString } from ".";
 // Create
 const createSchema = z
   .object({
-    name: z.string().min(1, "name-too-short").max(150, "name-too-long"),
-    content: z.string().min(1, "content-too-short").optional(),
-    type: z.enum(["file", "text"], "invalid-type"),
+    title: z.string().min(1, "title-too-short").max(200, "title-too-long"),
 
-    description: z
-      .string()
-      .min(1, "description-too-short")
-      .max(5000, "description-too-long"),
+    category: z.enum([
+      "regulation",
+      "administrative",
+      "campus_service",
+      "student_life",
+      "support",
+    ]),
 
-    category: z.enum(
-      [
-        "regulation",
-        "administrative",
-        "campus_service",
-        "student_life",
-        "support",
-      ],
-      "invalid-category",
-    ),
+    content: z.string().min(1, "content-too-short"),
 
     authorityLevel: z
       .number()
-      .int("authority-level-not-integer")
-      .min(0, "authority-level-too-low")
-      .max(1000, "authority-level-too-high"),
+      .int("authorityLevel-must-be-integer")
+      .min(0, "authorityLevel-too-low")
+      .max(1000, "authorityLevel-too-high"),
 
-    campuses: z.array(z.string().min(1)).min(1, "campus-required"),
+    sourceType: z.enum(["official", "approved_student"], {}),
+
+    campuses: z
+      .array(
+        z.enum([
+          "COMAYAGUA",
+          "TEGUCIGALPA",
+          "SANPEDRO",
+          "CHOLUTECA",
+          "LA CEIBA",
+          "DANLI",
+          "SANTA ROSA",
+          "GLOBAL",
+        ]),
+      )
+      .min(1, "at-least-one-campus-required"),
+
+    deliveryModes: z
+      .array(z.enum(["onsite", "online", "hybrid"], {}))
+      .min(1, "at-least-one-delivery-mode-required"),
 
     effectiveFrom: isoDateString,
-    effectiveUntil: isoDateString.optional(),
+    effectiveUntil: isoDateString.optional().nullable(),
 
-    tags: z
-      .array(z.string().min(1).max(50))
-      .max(20, "too-many-tags")
+    warnings: z
+      .object({
+        legal: z.string().min(1, "legal-warning-too-short").max(500).optional(),
+        timeSensitive: z
+          .string()
+          .min(1, "timeSensitive-warning-too-short")
+          .max(500)
+          .optional(),
+        campusSpecific: z
+          .string()
+          .min(1, "campusSpecific-warning-too-short")
+          .max(500)
+          .optional(),
+      })
       .optional(),
 
-    // File is validated separately (multipart/form-data)
+    summary: z
+      .string()
+      .min(1, "summary-too-short")
+      .max(5000, "summary-too-long"),
+
+    tags: z
+      .array(z.string().min(1, "tag-too-short").max(50, "tag-too-long"))
+      .max(20, "too-many-tags")
+      .optional(),
   })
-  .refine((data) => (data.type === "text" ? !!data.content : true), {
-    message: "content-required-for-text-type",
-  });
-// .refine(
-//   (data) => !data.effectiveUntil || data.effectiveUntil >= data.effectiveFrom,
-//   {
-//     message: "effective-until-before-effective-from",
-//     path: ["effectiveUntil"],
-//   },
-// );
+  .refine(
+    (data) =>
+      !data.effectiveUntil ||
+      new Date(data.effectiveUntil) >= new Date(data.effectiveFrom),
+    {
+      message: "effectiveUntil-cannot-be-before-effectiveFrom",
+      path: ["effectiveUntil"],
+    },
+  );
 
 // Update
 const updateSchema = z.object({

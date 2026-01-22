@@ -9,7 +9,6 @@ import {
 
 export interface IRAGDocument {
   _id: string; // database internal ID
-  docId: string; // UUID or slug
   title: string;
   category: DocumentCategory;
 

@@ -1,16 +1,9 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import { IRAGDocument } from "../../../shared/models/rag-document";
 import metadataSchema from "./Metadata"; // reuse your existing metadata schema
 
 const ragDocumentSchema = new mongoose.Schema<IRAGDocument>(
   {
-    docId: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      index: true,
-    },
     title: {
       type: String,
       required: true,
@@ -19,6 +12,13 @@ const ragDocumentSchema = new mongoose.Schema<IRAGDocument>(
     category: {
       type: String,
       required: true,
+      enum: [
+        "regulation",
+        "administrative",
+        "campus_service",
+        "student_life",
+        "support",
+      ],
       index: true,
     },
     authorityLevel: {
@@ -29,16 +29,28 @@ const ragDocumentSchema = new mongoose.Schema<IRAGDocument>(
     sourceType: {
       type: String,
       required: true,
+      enum: ["official", "approved_student"],
       index: true,
     },
     campuses: {
       type: [String],
       required: true,
+      enum: [
+        "COMAYAGUA",
+        "TEGUCIGALPA",
+        "SANPEDRO",
+        "CHOLUTECA",
+        "LA CEIBA",
+        "DANLI",
+        "SANTA ROSA",
+        "GLOBAL",
+      ],
       default: ["GLOBAL"],
     },
     deliveryModes: {
       type: [String],
       required: true,
+      enum: ["onsite", "online", "hybrid"],
       default: [],
     },
     effectiveFrom: {
