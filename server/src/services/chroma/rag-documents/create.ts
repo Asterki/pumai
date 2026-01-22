@@ -15,6 +15,10 @@ export type CreateRagDocChunkParameters = {
   chunkId: string; // deterministic: `${docId}:${chunkIndex}`
   embedding: number[];
 
+  name: string;
+  type: string;
+  description: string;
+
   content: string;
 
   docId: string;
@@ -46,16 +50,7 @@ export async function createRagDocChunk(
 ): Promise<void> {
   const startTime = performance.now();
 
-  const client = new ChromaClient({
-    host: process.env.CHROMA_DB_HOST || "localhost",
-    port: process.env.CHROMA_DB_PORT
-      ? parseInt(process.env.CHROMA_DB_PORT)
-      : 8000,
-    ssl: process.env.CHROMA_DB_SSL === "true",
-    fetchOptions: {
-      keepalive: true,
-    },
-  });
+  const client = ChromaService.getInstance().getClient();
 
   const collection = await client.getOrCreateCollection({
     name: "rag-documents",
@@ -77,28 +72,34 @@ export async function createRagDocChunk(
     warnings,
     tags,
     publicUrl,
+    name,
+    type,
+    description,
   } = parameters;
 
   await collection.add({
     ids: [chunkId],
     embeddings: [embedding],
     documents: [content],
-    // metadatas: [
-    //   {
-    //     docId,
-    //     chunkIndex,
-    //     category,
-    //     authorityLevel,
-    //     campuses: campuses.join(","),
-    //     deliveryModes: deliveryModes.join(","),
-    //     effectiveFrom: effectiveFrom.toISOString(),
-    //     effectiveUntil: effectiveUntil ? effectiveUntil.toISOString() : null,
-    //     archived,
-    //     warnings: warnings.join("~"),
-    //     tags: tags.join(","),
-    //     publicUrl,
-    //   },
-    // ],
+    metadatas: [
+      {
+        docId,
+        name,
+        type,
+        description,
+        chunkIndex,
+        category,
+        authorityLevel,
+        campuses: campuses.join(","),
+        deliveryModes: deliveryModes.join(","),
+        effectiveFrom: effectiveFrom.toISOString(),
+        effectiveUntil: effectiveUntil ? effectiveUntil.toISOString() : null,
+        archived: false,
+        warnings: warnings.join("~"),
+        tags: tags.join(","),
+        publicUrl,
+      },
+    ],
   });
 
   LoggingService.log({

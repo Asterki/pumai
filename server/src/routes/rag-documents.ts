@@ -1,6 +1,6 @@
 import express, { RequestHandler } from "express";
 
-// import listHandler from "../controllers/rag-documents/list";
+import listHandler from "../controllers/rag-documents/list";
 // import getHandler from "../controllers/rag-documents/get";
 import createHandler from "../controllers/rag-documents/create";
 
@@ -21,12 +21,12 @@ router.post(
   createHandler as RequestHandler,
 );
 
-// router.post(
-//   "/list",
-//   validateRequestBody(listSchema),
-//   listHandler as RequestHandler,
-// );
-//
+router.post(
+  "/list",
+  validateRequestBody(listSchema),
+  listHandler as RequestHandler,
+);
+
 // router.post(
 //   "/get",
 //   validateRequestBody(getSchema),

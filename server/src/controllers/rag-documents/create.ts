@@ -28,6 +28,9 @@ const handler = async (
     authorityLevel,
     tags,
     effectiveUntil,
+    name,
+    type,
+    description,
   } = req.body;
   const adminAccount = req.user as IRAGDocument;
 
@@ -37,11 +40,14 @@ const handler = async (
     const embedding = await OllamaEmbedService.getInstance().embedText(
       content as string,
     );
-    console.log(embedding);
 
-    // Pass session explicitly to service
+    // Simulating storing document
+
     createRagDocChunkWithRetry(
       {
+        name,
+        type,
+        description,
         warnings: [],
         archived: false,
         chunkId: uuidv4(), // Will be generated in services

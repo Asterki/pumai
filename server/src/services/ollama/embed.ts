@@ -31,7 +31,6 @@ class OllamaEmbeddingClient {
     text: string,
     options?: EmbedRequest,
   ): Promise<number[]> {
-    console.log(process.env.OLLAMA_EMBEDDING_MODEL);
     const response = await this.client.embed({
       model: process.env.OLLAMA_EMBEDDING_MODEL || "embeddinggemma:latest",
       input: text,
@@ -44,7 +43,12 @@ class OllamaEmbeddingClient {
     const queryEmbedding = await this.embedText(prompt);
 
     // Call the database
-    const collection = ChromaService.getInstance().getCollection();
+    const collection = await ChromaService.getInstance()
+      .getClient()
+      .getOrCreateCollection({
+        name: "rag-documents",
+        embeddingFunction: this.getEmbedder(),
+      });
     const results = await collection!.query({
       queryEmbeddings: [queryEmbedding], // Apply RAG
       nResults: 3,

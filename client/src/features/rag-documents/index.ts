@@ -28,7 +28,7 @@ import { useCreateRagDocumentModal } from "./hooks/useCreateRagDocument";
 
 // Components
 import { RagDocumentsTable } from "./components/DocumentsTable";
-import { CreateRagDocumentModal } from "./components/CreateRAGDocumentModal";
+import { CreateRagDocumentDrawer } from "./components/CreateRAGDocumentDrawer";
 // import { CreateAccountRoleModal } from "./components/CreateAccountRoleModal";
 
 export type { IRAGDocument, ListRAGDocument, RAGDocumentsAPITypes };
@@ -43,7 +43,7 @@ export default {
   },
   components: {
     RagDocumentsTable,
-    CreateRagDocumentModal,
+    CreateRagDocumentDrawer,
     // CreateAccountRoleModal,
   },
 };

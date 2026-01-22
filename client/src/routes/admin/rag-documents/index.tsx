@@ -71,7 +71,7 @@ function RouteComponent() {
 
   return (
     <AdminPageLayout selectedPage="rag-documents">
-      <RAGDocumentsFeature.components.CreateRagDocumentModal
+      <RAGDocumentsFeature.components.CreateRagDocumentDrawer
         setState={setCreateRagDocumentState}
         state={createRagDocumentState}
         onClose={closeCreateRagDocumentModal}

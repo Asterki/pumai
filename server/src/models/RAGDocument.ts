@@ -1,60 +1,91 @@
-import mongoose from "mongoose";
-import { ILog } from "../../../shared/models/log";
-import metadataSchema from "../schemas/metadata";
+import mongoose, { Schema } from "mongoose";
+import { IRAGDocument } from "../../../shared/models/rag-document";
+import metadataSchema from "./Metadata"; // reuse your existing metadata schema
 
-const logSchema = new mongoose.Schema<ILog>(
+const ragDocumentSchema = new mongoose.Schema<IRAGDocument>(
   {
-    date: {
+    docId: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      index: true,
+    },
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    category: {
+      type: String,
+      required: true,
+      index: true,
+    },
+    authorityLevel: {
+      type: Number,
+      required: true,
+      index: true,
+    },
+    sourceType: {
+      type: String,
+      required: true,
+      index: true,
+    },
+    campuses: {
+      type: [String],
+      required: true,
+      default: ["GLOBAL"],
+    },
+    deliveryModes: {
+      type: [String],
+      required: true,
+      default: [],
+    },
+    effectiveFrom: {
       type: Date,
       required: true,
       default: () => new Date(),
       index: true,
     },
-    source: {
-      type: String,
-      required: true,
-      index: true,
-      trim: true,
-    },
-    level: {
-      type: String,
-      enum: ["info", "warning", "error", "critical", "debug", "important"],
-      required: true,
-      index: true,
-    },
-    message: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    details: {
-      type: Map,
-      of: mongoose.Schema.Types.Mixed,
-      default: {},
-    },
-    traceId: {
-      type: String,
-      index: true,
-      trim: true,
+    effectiveUntil: {
+      type: Date,
       default: null,
-    },
-    // How much time the operation took
-    duration: {
-      type: Number,
-      default: 0, // in milliseconds
       index: true,
     },
-    _references: {
-      type: Map,
-      of: String, // maps keys in `details` to model names
+    archived: {
+      type: Boolean,
+      required: true,
+      default: false,
+      index: true,
+    },
+    warnings: {
+      legal: { type: String, default: undefined },
+      timeSensitive: { type: String, default: undefined },
+      campusSpecific: { type: String, default: undefined },
+    },
+    summary: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    tags: {
+      type: [String],
+      default: [],
+    },
+    metadata: {
+      type: metadataSchema,
       default: {},
     },
-    metadata: metadataSchema,
   },
   {
     versionKey: false, // removes __v
+    timestamps: true, // automatically adds createdAt and updatedAt
   },
 );
 
-const LogModel = mongoose.model<ILog>("Log", logSchema);
-export default LogModel;
+const RAGDocumentModel = mongoose.model<IRAGDocument>(
+  "RAGDocument",
+  ragDocumentSchema,
+);
+
+export default RAGDocumentModel;

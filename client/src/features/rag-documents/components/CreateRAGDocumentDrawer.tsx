@@ -6,6 +6,8 @@ import {
   Upload,
   Select,
   DatePicker,
+  Drawer,
+  Button,
 } from "antd";
 import { FaUpload } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
@@ -14,7 +16,7 @@ const { Dragger } = Upload;
 
 import type { CreateRagDocumentModalState } from "../hooks/useCreateRagDocument";
 
-export function CreateRagDocumentModal({
+export function CreateRagDocumentDrawer({
   state,
   setState,
   onClose,
@@ -31,18 +33,24 @@ export function CreateRagDocumentModal({
   const { t: tCommon } = useTranslation(["common"]);
 
   return (
-    <Modal
+    <Drawer
       title={t("title")}
       open={state.isOpen}
-      onCancel={onClose}
-      onOk={onCreate}
-      cancelText={tCommon("cancel")}
-      okText={t("title")}
-      okButtonProps={{
-        loading: state.loading,
-        icon: <FaUpload />,
-        disabled: state.loading || !state.content,
-      }}
+      width={1000}
+      extra={
+        <div className="flex gap-2 items-center justify-center">
+          <Button onClick={onClose}>{tCommon("cancel")}</Button>
+          <Button
+            type="primary"
+            loading={state.loading}
+            icon={<FaUpload />}
+            onClick={onCreate}
+            disabled={state.loading || !state.content}
+          >
+            {t("title")}
+          </Button>
+        </div>
+      }
     >
       <Form layout="vertical">
         <Form.Item label={t("fields.select")} required>
@@ -189,6 +197,6 @@ export function CreateRagDocumentModal({
           />
         </Form.Item>
       </Form>
-    </Modal>
+    </Drawer>
   );
 }

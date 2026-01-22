@@ -48,14 +48,13 @@ export async function startServer() {
     });
   }
 
-  // Services
-  await ChromaService.getInstance().getCollection();
-
   const sessions = SessionsService.prototype.getInstance();
   sessions.loadToServer(app);
 
   registerRoutes(app);
   new MongoDBClient(process.env.MONGODB_URI!).connect();
+  const chromaService = ChromaService.getInstance();
+  await chromaService.init();
 
   httpServer.listen(port, () => {
     console.log(`[Server] Listening on port ${port}`);
