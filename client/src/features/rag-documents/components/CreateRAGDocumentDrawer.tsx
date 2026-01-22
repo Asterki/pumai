@@ -3,16 +3,14 @@ import {
   Input,
   InputNumber,
   Modal,
-  Upload,
   Select,
   DatePicker,
   Drawer,
   Button,
 } from "antd";
+import dayjs from "dayjs";
 import { FaUpload } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
-
-const { Dragger } = Upload;
 
 import type { CreateRagDocumentModalState } from "../hooks/useCreateRagDocument";
 
@@ -32,6 +30,45 @@ export function CreateRagDocumentDrawer({
   });
   const { t: tCommon } = useTranslation(["common"]);
 
+  const CAMPUS_OPTIONS = [
+    "COMAYAGUA",
+    "TEGUCIGALPA",
+    "SANPEDRO",
+    "CHOLUTECA",
+    "LA CEIBA",
+    "DANLI",
+    "SANTA ROSA",
+    "GLOBAL",
+  ].map((c) => ({ label: c, value: c }));
+
+  const DELIVERY_MODE_OPTIONS = [
+    { value: "onsite", label: t("fields.deliveryModesOptions.onsite") },
+    { value: "online", label: t("fields.deliveryModesOptions.online") },
+    { value: "hybrid", label: t("fields.deliveryModesOptions.hybrid") },
+  ];
+
+  const CATEGORY_OPTIONS = [
+    { value: "regulation", label: t("fields.categoryOptions.regulation") },
+    {
+      value: "administrative",
+      label: t("fields.categoryOptions.administrative"),
+    },
+    {
+      value: "campus_service",
+      label: t("fields.categoryOptions.campus_service"),
+    },
+    { value: "student_life", label: t("fields.categoryOptions.student_life") },
+    { value: "support", label: t("fields.categoryOptions.support") },
+  ];
+
+  const SOURCE_TYPE_OPTIONS = [
+    { value: "official", label: t("fields.sourceTypeOptions.official") },
+    {
+      value: "approved_student",
+      label: t("fields.sourceTypeOptions.approved_student"),
+    },
+  ];
+
   return (
     <Drawer
       title={t("title")}
@@ -43,7 +80,6 @@ export function CreateRagDocumentDrawer({
           <Button
             type="primary"
             loading={state.loading}
-            icon={<FaUpload />}
             onClick={onCreate}
             disabled={state.loading || !state.content}
           >
@@ -53,81 +89,46 @@ export function CreateRagDocumentDrawer({
       }
     >
       <Form layout="vertical">
-        <Form.Item label={t("fields.select")} required>
+        <Form.Item label={t("fields.contentType")} required>
           <Select
             placeholder={t("fields.selectPlaceholder")}
-            options={[{ label: t("fields.text"), value: "text" }]}
-            onChange={(value) =>
-              setState((prev: any) => ({ ...prev, type: value }))
-            }
-            value={state.type}
+            options={[{ label: "Text", value: "text" }]}
+            value="text"
+            disabled
+            onChange={() => {}}
           />
         </Form.Item>
 
-        {state.type === "file" && (
-          <Form.Item label={t("fields.file")} required>
-            <Dragger
-              beforeUpload={(file) => {
-                setState((prev: any) => ({ ...prev, file }));
-                return false;
-              }}
-              maxCount={1}
-            >
-              <p className="ant-upload-drag-icon">
-                <FaUpload />
-              </p>
-              <p className="ant-upload-text">{t("fields.fileHint")}</p>
-            </Dragger>
-          </Form.Item>
-        )}
-
-        {state.type === "text" && (
-          <Form.Item label={t("fields.content")} required>
-            <Input.TextArea
-              rows={6}
-              maxLength={5000}
-              placeholder={t("fields.contentPlaceholder")}
-              onChange={(e) =>
-                setState((prev: any) => ({ ...prev, content: e.target.value }))
-              }
-            />
-          </Form.Item>
-        )}
-
-        <Form.Item label={t("fields.name")} required>
-          <Input
-            maxLength={150}
-            placeholder={t("fields.namePlaceholder")}
+        <Form.Item label={t("fields.content")} required>
+          <Input.TextArea
+            rows={6}
+            maxLength={5000}
+            placeholder={t("fields.contentPlaceholder")}
+            value={state.content}
             onChange={(e) =>
-              setState((prev: any) => ({ ...prev, name: e.target.value }))
+              setState((prev) => ({ ...prev, content: e.target.value }))
             }
           />
         </Form.Item>
 
-        <Form.Item label={t("fields.description")} required>
+        <Form.Item label={t("fields.title")} required>
           <Input
-            maxLength={150}
-            placeholder={t("fields.descriptionPlaceholder")}
+            maxLength={200}
+            placeholder={t("fields.titlePlaceholder")}
+            value={state.title}
             onChange={(e) =>
-              setState((prev: any) => ({
-                ...prev,
-                description: e.target.value,
-              }))
+              setState((prev) => ({ ...prev, title: e.target.value }))
             }
           />
         </Form.Item>
 
         <Form.Item label={t("fields.category")} required>
           <Select
-            options={[
-              { value: "regulation", label: "Regulación" },
-              { value: "administrative", label: "Administrativo" },
-              { value: "campus_service", label: "Servicios del campus" },
-              { value: "student_life", label: "Vida estudiantil" },
-              { value: "support", label: "Soporte" },
-            ]}
+            placeholder={t("fields.categoryPlaceholder")}
+            options={CATEGORY_OPTIONS}
+            value={state.category}
             onChange={(value) =>
-              setState((prev: any) => ({ ...prev, category: value }))
+              setState((prev) => ({ ...prev, category: value }))
             }
           />
         </Form.Item>
@@ -141,13 +142,22 @@ export function CreateRagDocumentDrawer({
             min={0}
             max={1000}
             precision={0}
-            className="w-full"
             style={{ width: "100%" }}
+            className="w-full"
+            value={state.authorityLevel}
             onChange={(value) =>
-              setState((prev: any) => ({
-                ...prev,
-                authorityLevel: value,
-              }))
+              setState((prev) => ({ ...prev, authorityLevel: value ?? 0 }))
+            }
+          />
+        </Form.Item>
+
+        <Form.Item label={t("fields.sourceType")} required>
+          <Select
+            placeholder={t("fields.sourceTypePlaceholder")}
+            options={SOURCE_TYPE_OPTIONS}
+            value={state.sourceType}
+            onChange={(value) =>
+              setState((prev) => ({ ...prev, sourceType: value }))
             }
           />
         </Form.Item>
@@ -155,19 +165,33 @@ export function CreateRagDocumentDrawer({
         <Form.Item label={t("fields.campuses")} required>
           <Select
             mode="multiple"
-            placeholder="GLOBAL o campus específicos"
+            placeholder={t("fields.campusesPlaceholder")}
+            options={CAMPUS_OPTIONS}
+            value={state.campuses}
             onChange={(value) =>
-              setState((prev: any) => ({ ...prev, campuses: value }))
+              setState((prev) => ({ ...prev, campuses: value }))
             }
-            options={[{ label: "GLOBAL", value: "global" }]}
+          />
+        </Form.Item>
+
+        <Form.Item label={t("fields.deliveryModes")} required>
+          <Select
+            mode="multiple"
+            placeholder={t("fields.deliveryModesPlaceholder")}
+            options={DELIVERY_MODE_OPTIONS}
+            value={state.deliveryModes}
+            onChange={(value) =>
+              setState((prev) => ({ ...prev, deliveryModes: value }))
+            }
           />
         </Form.Item>
 
         <Form.Item label={t("fields.effectiveFrom")} required>
           <DatePicker
             className="w-full"
+            value={state.effectiveFrom ? dayjs(state.effectiveFrom) : null}
             onChange={(date) =>
-              setState((prev: any) => ({
+              setState((prev) => ({
                 ...prev,
                 effectiveFrom: date?.toISOString(),
               }))
@@ -178,11 +202,23 @@ export function CreateRagDocumentDrawer({
         <Form.Item label={t("fields.effectiveUntil")}>
           <DatePicker
             className="w-full"
+            value={state.effectiveUntil ? dayjs(state.effectiveFrom) : null}
             onChange={(date) =>
-              setState((prev: any) => ({
+              setState((prev) => ({
                 ...prev,
                 effectiveUntil: date ? date.toISOString() : null,
               }))
+            }
+          />
+        </Form.Item>
+
+        <Form.Item label={t("fields.summary")} required>
+          <Input.TextArea
+            rows={4}
+            maxLength={5000}
+            value={state.summary}
+            onChange={(e) =>
+              setState((prev) => ({ ...prev, summary: e.target.value }))
             }
           />
         </Form.Item>
@@ -191,8 +227,40 @@ export function CreateRagDocumentDrawer({
           <Select
             mode="tags"
             placeholder={t("fields.tagsPlaceholder")}
-            onChange={(value) =>
-              setState((prev: any) => ({ ...prev, tags: value }))
+            value={state.tags}
+            onChange={(value) => setState((prev) => ({ ...prev, tags: value }))}
+          />
+        </Form.Item>
+
+        <Form.Item label={t("fields.warnings")}>
+          <Input
+            placeholder={t("fields.warningsLegal")}
+            value={state.warnings?.legal || ""}
+            onChange={(e) =>
+              setState((prev) => ({
+                ...prev,
+                warnings: { ...prev.warnings, legal: e.target.value },
+              }))
+            }
+          />
+          <Input
+            placeholder={t("fields.warningsTimeSensitive")}
+            value={state.warnings?.timeSensitive || ""}
+            onChange={(e) =>
+              setState((prev) => ({
+                ...prev,
+                warnings: { ...prev.warnings, timeSensitive: e.target.value },
+              }))
+            }
+          />
+          <Input
+            placeholder={t("fields.warningsCampusSpecific")}
+            value={state.warnings?.campusSpecific || ""}
+            onChange={(e) =>
+              setState((prev) => ({
+                ...prev,
+                warnings: { ...prev.warnings, campusSpecific: e.target.value },
+              }))
             }
           />
         </Form.Item>

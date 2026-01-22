@@ -40,7 +40,7 @@ const handler = async (
     session.startTransaction();
 
     const embedding = await OllamaEmbedService.getInstance().embedText(
-      content as string,
+      content as string, // TODO: Temporal, sometimes content comes as a file
     );
 
     const ragDocument = await createRAGDocumentWithRetry(
@@ -95,6 +95,7 @@ const handler = async (
       status: "success",
     });
   } catch (error: unknown) {
+    console.log(error);
     await session.abortTransaction();
     if (error instanceof APIError) {
       res.status(error.httpStatus).send({ status: error.status });

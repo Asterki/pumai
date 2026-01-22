@@ -14,7 +14,8 @@ const createSchema = z
       "support",
     ]),
 
-    content: z.string().min(1, "content-too-short"),
+    content: z.string().min(1, "content-too-short").optional(),
+    contentType: z.enum(["file", "text"], "invalid-content-type"),
 
     authorityLevel: z
       .number()
@@ -48,17 +49,9 @@ const createSchema = z
 
     warnings: z
       .object({
-        legal: z.string().min(1, "legal-warning-too-short").max(500).optional(),
-        timeSensitive: z
-          .string()
-          .min(1, "timeSensitive-warning-too-short")
-          .max(500)
-          .optional(),
-        campusSpecific: z
-          .string()
-          .min(1, "campusSpecific-warning-too-short")
-          .max(500)
-          .optional(),
+        legal: z.string().max(500).optional(),
+        timeSensitive: z.string().max(500).optional(),
+        campusSpecific: z.string().max(500).optional(),
       })
       .optional(),
 
@@ -79,6 +72,14 @@ const createSchema = z
     {
       message: "effectiveUntil-cannot-be-before-effectiveFrom",
       path: ["effectiveUntil"],
+    },
+  )
+  .refine(
+    (data) =>
+      data.contentType === "file" ||
+      (data.contentType === "text" && data.content),
+    {
+      message: "content-required-for-text-contentType",
     },
   );
 

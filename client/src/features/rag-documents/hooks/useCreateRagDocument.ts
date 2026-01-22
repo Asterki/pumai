@@ -24,16 +24,23 @@ export function useCreateRagDocumentModal({
   const defaultState: CreateRagDocumentModalState = {
     isOpen: false,
     loading: false,
-    type: "text",
-    content: "",
+    sourceType: "official",
+    campuses: [],
+    deliveryModes: [],
     authorityLevel: 1,
-    campuses: ["GLOBAL"],
-    category: "student_life",
-    description: "",
+    category: "regulation",
     effectiveFrom: new Date().toISOString(),
-    name: "",
-    effectiveUntil: undefined,
+    effectiveUntil: new Date().toISOString(),
     tags: [],
+    summary: "",
+    warnings: {
+      campusSpecific: "",
+      legal: "",
+      timeSensitive: "",
+    },
+    title: "",
+    contentType: "text",
+    content: "",
   };
 
   const [state, setState] = useState<CreateRagDocumentModalState>(defaultState);
@@ -41,7 +48,8 @@ export function useCreateRagDocumentModal({
   const createDocument = useCallback(async () => {
     if (state.loading) return;
 
-    const parsedData = RagDocumentsFeature.schemas.createSchema.safeParse(state);
+    const parsedData =
+      RagDocumentsFeature.schemas.createSchema.safeParse(state);
     if (!parsedData.success) {
       parsedData.error.issues.forEach((issue) => {
         message.warning(t(`messages:${issue.message}`));

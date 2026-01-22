@@ -207,32 +207,50 @@ const translation = {
         },
 
         createModal: {
-          title: "Subir documento",
-
+          title: "Crear Documento RAG",
           fields: {
-            select: "Seleccionar Tipo de Documento",
-            selectPlaceholder: "Seleccione el tipo de documento",
-            file: "Archivo",
-            text: "Texto",
-            chunk: "Fragmento de texto",
-
-            fileHint: "PDF, DOCX o imagen escaneada",
-
-            name: "Nombre del documento",
-            namePlaceholder: "Ej. Reglamento de inscripción",
-
+            contentType: "Tipo de contenido",
+            selectPlaceholder: "Selecciona un tipo",
+            content: "Contenido",
+            contentPlaceholder: "Escribe el contenido del documento",
+            title: "Título",
+            titlePlaceholder: "Ingresa el título",
             category: "Categoría",
-
+            categoryPlaceholder: "Selecciona una categoría",
             authorityLevel: "Nivel de autoridad",
-            authorityLevelHint: "Mayor valor = mayor prioridad",
-
-            campuses: "Campus aplicables",
-
+            authorityLevelHint: "Nivel numérico indicando autoridad (0–1000)",
+            sourceType: "Tipo de fuente",
+            sourceTypePlaceholder: "Selecciona tipo de fuente",
+            campuses: "Campus",
+            campusesPlaceholder: "Selecciona uno o varios campus",
+            deliveryModes: "Modalidades de entrega",
+            deliveryModesPlaceholder: "Selecciona una o varias modalidades",
             effectiveFrom: "Válido desde",
             effectiveUntil: "Válido hasta",
-
+            summary: "Resumen",
             tags: "Etiquetas",
-            tagsPlaceholder: "Ej. inscripción, pagos, biblioteca",
+            tagsPlaceholder: "Añade etiquetas",
+            warnings: "Advertencias",
+            warningsLegal: "Advertencia legal",
+            warningsTimeSensitive: "Advertencia sensible al tiempo",
+            warningsCampusSpecific: "Advertencia específica del campus",
+
+            categoryOptions: {
+              regulation: "Regulación",
+              administrative: "Administrativo",
+              campus_service: "Servicios del campus",
+              student_life: "Vida estudiantil",
+              support: "Soporte",
+            },
+            sourceTypeOptions: {
+              official: "Oficial",
+              approved_student: "Aprobado por estudiantes",
+            },
+            deliveryModesOptions: {
+              onsite: "Presencial",
+              online: "En línea",
+              hybrid: "Híbrido",
+            },
           },
         },
       },
